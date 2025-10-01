@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "../public/css/main.css";
 import "../public/css/responsive.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; 
-
 import Header from "./component/Header";
 import HomeMain from "./component/home/HomeMain";
 import Footer from "./component/Footer";
@@ -18,7 +17,7 @@ import ReferralsMain from "./component/Referrals/ReferralsMain";
 import BookingAppointment from "./component/BookingAppointment/BookingAppointment";
 import HistoryProductDetails from "./component/History/HistoryProductDetails";
 import KumdaliFormMain from "./features/kundali/KumdaliFormMain";
-import KundaliMatchingMain from "./features/kundali/kundaliMatchingMain";
+import KundaliMatchingMain from "./features/kundali/KundaliMatchingMain";
 import PujaMain from "./features/Puja/PujaMain";
 import PujaBookDetails from "./component/Puja/PujaBookDetails";
 import Checkout from "./component/Puja/checkout/Checkout";
