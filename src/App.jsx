@@ -17,7 +17,6 @@ import HistroryMain from "./component/History/HistroryMain";
 import ReferralsMain from "./component/Referrals/ReferralsMain";
 import BookingAppointment from "./component/BookingAppointment/BookingAppointment";
 import HistoryProductDetails from "./component/History/HistoryProductDetails";
-import KundaliForm from "./component/FreeKundali/KundaliForm";
 import KumdaliFormMain from "./features/kundali/KumdaliFormMain";
 import KundaliMatchingMain from "./features/kundali/kundaliMatchingMain";
 import PujaMain from "./features/Puja/PujaMain";

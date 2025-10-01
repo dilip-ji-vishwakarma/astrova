@@ -1,4 +1,3 @@
-import React from "react";
 import HeaderBreadcrumb from "../../component/HeaderBreadcrumb";
 import KundaliMatchingTabs from "../../component/KundaliMatching/KundaliMatchingTabs";
 
