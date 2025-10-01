@@ -1,15 +1,8 @@
-import React, { useState } from "react";
 import TextInputField from "../../commonComp/TextInputField";
 import { FaUser } from "react-icons/fa";
 import CommonButton from "../../commonComp/CommonButton";
 
 const KundliStepOne = ({ onNext }) => {
-  const [name, setName] = useState("");
-
-  const handleSubmit = () => {
-    onNext(name);
-  };
-
   return (
     <div className="name-form">
       <TextInputField

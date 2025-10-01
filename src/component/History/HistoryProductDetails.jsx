@@ -1,16 +1,12 @@
-import React, { useState } from "react";
 import HeaderBreadcrumb from "../HeaderBreadcrumb";
 import HistoryTabFilter from "./HistoryTabFilter";
-import { fakeHistoryData } from "./callHistoryData";
 import { useLocation } from "react-router-dom";
 import { IoIosInformationCircleOutline } from "react-icons/io";
-import { FaDownload } from "react-icons/fa";
 import { MdOutlineDownload } from "react-icons/md";
 
 const HistoryProductDetails = () => {
   const { state } = useLocation();
   const { product } = state || {}; // destructure product data
-  const [selectedTab, setSelectedTab] = React.useState("shopping");
 
   if (!product) return <div>No data found.</div>;
 

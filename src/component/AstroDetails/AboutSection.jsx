@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AboutSection = ({ content }) => {
+const AboutSection = () => {
   const [showFull, setShowFull] = useState(false);
 
   return (

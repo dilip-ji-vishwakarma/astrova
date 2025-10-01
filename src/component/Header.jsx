@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import LinkCommon from "./commonComp/LinkCommon";
 import CommonButton from "./commonComp/CommonButton";
 import LoginPopup from "./commonComp/LoginPopup";
 

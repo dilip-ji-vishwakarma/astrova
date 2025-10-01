@@ -1,6 +1,4 @@
-import React from "react";
 import BlogCard from "./BlogCard";
-import blogData from "./blogData";
 import SectionHeader from "../../commonComp/SectionHeader";
 
 const BlogMain = () => {
