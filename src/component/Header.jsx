@@ -50,16 +50,22 @@ const Header = () => {
             <div className="collapse navbar-collapse" id="navbarContent">
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/" activeClassName="active">
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link active" : "nav-link"
+                    }
+                  >
                     Home
                   </NavLink>
                 </li>
 
                 <li className="nav-item">
                   <NavLink
-                    className="nav-link"
                     to="/free-kundali"
-                    activeClassName="active"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link active" : "nav-link"
+                    }
                   >
                     Free Kundli
                   </NavLink>
@@ -117,12 +123,18 @@ const Header = () => {
                     aria-labelledby="horoscopeDropdown"
                   >
                     <li>
-                      <NavLink className="dropdown-item" to="/horoscope/daily">
+                      <NavLink
+                        className="dropdown-item"
+                        to="/horoscope/daily"
+                      >
                         Daily Horoscope
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink className="dropdown-item" to="/horoscope/weekly">
+                      <NavLink
+                        className="dropdown-item"
+                        to="/horoscope/weekly"
+                      >
                         Weekly Horoscope
                       </NavLink>
                     </li>
@@ -135,7 +147,10 @@ const Header = () => {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink className="dropdown-item" to="/horoscope/yearly">
+                      <NavLink
+                        className="dropdown-item"
+                        to="/horoscope/yearly"
+                      >
                         Yearly Horoscope
                       </NavLink>
                     </li>
@@ -144,28 +159,28 @@ const Header = () => {
 
                 <li className="nav-item">
                   <NavLink
-                    className="nav-link"
                     to="/kundli-matching"
-                    activeClassName="active"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link active" : "nav-link"
+                    }
                   >
                     Kundli Matching
                   </NavLink>
                 </li>
-
-                
               </ul>
             </div>
-            <a className="">
-                  {isLoggedIn ? (
-                    <div className="user_dropdown">Welcome, User ▼</div>
-                  ) : (
-                    <CommonButton
-                      text="Login"
-                      className="ms-2 login_btn rounded-5 "
-                      onClick={handleLoginClick}
-                    />
-                  )}
-                </a>
+
+            <div>
+              {isLoggedIn ? (
+                <div className="user_dropdown">Welcome, User ▼</div>
+              ) : (
+                <CommonButton
+                  text="Login"
+                  className="ms-2 login_btn rounded-5"
+                  onClick={handleLoginClick}
+                />
+              )}
+            </div>
           </div>
         </nav>
       </div>

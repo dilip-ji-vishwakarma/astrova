@@ -1,31 +1,50 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FaArrowRight } from "react-icons/fa6";
-import { MdPhone } from "react-icons/md";
-import TextInputField from "./TextInputField";
-import CommonButton from "./CommonButton";
+import  { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useLoginWithOtp } from "./hook/use-login-with-otp";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const LoginPopup = ({ onClose }) => {
-  const [mobile, setMobile] = useState("");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState("mobile"); // 'mobile' or 'otp'
+  const [step, setStep] = useState("mobile");
+  const [otpLoading, setOtpLoading] = useState(false);
   const [timer, setTimer] = useState(60);
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const [phoneNumber, setPhoneNumber] = useState("");
   const inputsRef = useRef([]);
-  const handleMobileSubmit = () => {
-    if (mobile.length === 10) {
-      setStep("otp"); // Move to OTP step
-    } else {
-      setStep("otp");
-      //   alert("Enter a valid 10-digit mobile number");
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm();
+  const { requestOtp, verifyOtp } = useLoginWithOtp(setStep, onClose);
+
+  const handleMobileSubmit = async (data) => {
+    setPhoneNumber(data.phone);
+    await requestOtp(data);
+  };
+
+const handleOtpSubmit = async () => {
+  setOtpLoading(true); 
+  await verifyOtp(phoneNumber, otp);
+  setOtpLoading(false); 
+};
+
+
+  const handleOtpChange = (index, value) => {
+    if (!/^\d?$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) {
+      inputsRef.current[index + 1].focus();
     }
   };
 
-  const handleOtpSubmit = () => {
-    if (otp.length === 6) {
-      alert("OTP Verified");
-      // You can proceed with login or close popup
-      // onClose();
-    } else {
-      alert("Enter a valid  OTP");
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputsRef.current[index - 1].focus();
     }
   };
 
@@ -35,24 +54,6 @@ const LoginPopup = ({ onClose }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleChange = (index, value) => {
-    if (!/^\d?$/.test(value)) return; // allow only digits
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // move to next input if not last
-    if (value && index < 3) {
-      inputsRef.current[index + 1].focus();
-    }
-  };
-
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
-    }
-  };
 
   return (
     <div className="login_popup_overlay">
@@ -65,53 +66,58 @@ const LoginPopup = ({ onClose }) => {
         </div>
 
         {step === "mobile" ? (
-          <div className="login_popup_content">
-            <p>You will receive a 6-digit code for verification</p>
-
-            <TextInputField
-              label="Enter your phone number"
-              placeholder="+91 ..........."
-              type="tel"
-              icon={<MdPhone />}
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              maxLength={10}
-            />
-
-            <div className="login_popup_login_btn">
-              <CommonButton
-                onClick={handleMobileSubmit}
-                text="GET OTP"
-                iconRight={FaArrowRight}
-              />
+          <form onSubmit={handleSubmit(handleMobileSubmit)}>
+            <div className="login_popup_content">
+              <p>You will receive a 6-digit code for verification</p>
+              <div className="login-form">
+                <label>Enter your phone number</label>
+                <Controller
+                  name="phone"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Mobile No. is required", minLength: 10 }}
+                  render={({ field }) => (
+                    <PhoneInput
+                      {...field}
+                      country={"in"}
+                      onlyCountries={["in", "us", "gb"]}
+                      placeholder="Enter phone number"
+                      inputProps={{
+                        name: "Enter your phone number",
+                        required: true,
+                        autoFocus: true,
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <div className="login_popup_login_btn">
+                <button type="submit">
+                  {isSubmitting ? (
+                    <span className="spinner"></span>
+                  ) : (
+                    <span>Get OTP</span>
+                  )}
+                </button>
+              </div>
+              <p className="terms_text">
+                By Signing up, you agree to our <a href="#">Terms of Use</a> and{" "}
+                <a href="#">Privacy Policy</a>
+              </p>
             </div>
-
-            <p className="terms_text">
-              By Signing up, you agree to our <a href="#">Terms of Use</a> and{" "}
-              <a href="#">Privacy Policy</a>
-            </p>
-          </div>
+          </form>
         ) : (
           <div className="login_popup_content">
             <p>Enter the 6-digit OTP sent to your mobile number</p>
-
-            {/* <TextInputField
-              label="OTP"
-              placeholder="Enter 6 digit OTP"
-              type="tel"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              maxLength={6}
-            /> */}
             <div className="otp_input_container">
-              {[0, 1, 2, 3].map((i) => (
+              {otp.map((value, i) => (
                 <input
                   key={i}
                   type="text"
                   maxLength="1"
-                  value={otp[i]}
-                  onChange={(e) => handleChange(i, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(i, e)}
+                  value={value}
+                  onChange={(e) => handleOtpChange(i, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(i, e)}
                   ref={(el) => (inputsRef.current[i] = el)}
                   className="otp_input"
                 />
@@ -119,13 +125,12 @@ const LoginPopup = ({ onClose }) => {
             </div>
 
             <div className="login_popup_login_btn">
-              <CommonButton
-                onClick={handleOtpSubmit}
-                text="Verify OTP"
-                iconRight={FaArrowRight}
-              />
+              <button type="button" onClick={handleOtpSubmit}>
+                {otpLoading ? <span className="spinner"></span> : <span>Verify OTP</span>}
+              </button>
             </div>
-            <p className=" resend_text">
+
+            <p className="resend_text">
               Resend OTP available in{" "}
               <span className="text-danger">{timer}s</span>
             </p>

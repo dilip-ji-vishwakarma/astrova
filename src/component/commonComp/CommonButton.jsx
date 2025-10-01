@@ -8,7 +8,7 @@ const CommonButton = ({
   onClick,
 }) => {
   return (
-    <button className={`round_Shap_btn ${className}`} onClick={onClick}>
+    <button type="submit" className={`round_Shap_btn ${className}`} onClick={onClick}>
       {IconLeft && <IconLeft style={{ marginRight: "6px" }} />}
       {text}
       {IconRight && <IconRight style={{ marginLeft: "6px" }} />}

@@ -63,8 +63,6 @@ function App() {
           path="/daily-panchang"
           element={<div>Daily Panchang Page</div>}
         />
-
-        <Route path="/login" element={<div>Login Page</div>} />
       </Routes>
       <Footer />
     </>
