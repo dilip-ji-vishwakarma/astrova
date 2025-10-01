@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CommonButton from "./commonComp/CommonButton";
 import LoginPopup from "./commonComp/LoginPopup";
@@ -9,6 +8,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,8 +18,25 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Check if session exists
+  useEffect(() => {
+    const token = localStorage.getItem("sessionToken");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   const handleLoginClick = () => {
     if (!isLoggedIn) setShowLoginPopup(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("sessionToken");
+    localStorage.removeItem("userInfo");
+    setIsLoggedIn(false);
+    navigate("/");
   };
 
   return (
@@ -105,6 +122,18 @@ const Header = () => {
                     </li>
                   </ul>
                 </li>
+                <li className="nav-item">
+                  {isLoggedIn && (
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive ? "nav-link active" : "nav-link"
+                      }
+                      to="/my-profile"
+                    >
+                      My Profile
+                    </NavLink>
+                  )}
+                </li>
 
                 {/* Dropdown: Horoscope */}
                 <li className="nav-item dropdown">
@@ -123,18 +152,12 @@ const Header = () => {
                     aria-labelledby="horoscopeDropdown"
                   >
                     <li>
-                      <NavLink
-                        className="dropdown-item"
-                        to="/horoscope/daily"
-                      >
+                      <NavLink className="dropdown-item" to="/horoscope/daily">
                         Daily Horoscope
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink
-                        className="dropdown-item"
-                        to="/horoscope/weekly"
-                      >
+                      <NavLink className="dropdown-item" to="/horoscope/weekly">
                         Weekly Horoscope
                       </NavLink>
                     </li>
@@ -147,10 +170,7 @@ const Header = () => {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink
-                        className="dropdown-item"
-                        to="/horoscope/yearly"
-                      >
+                      <NavLink className="dropdown-item" to="/horoscope/yearly">
                         Yearly Horoscope
                       </NavLink>
                     </li>
@@ -172,13 +192,19 @@ const Header = () => {
 
             <div>
               {isLoggedIn ? (
-                <div className="user_dropdown">Welcome, User ▼</div>
+                <button
+                  className="ms-2 login_btn rounded-5 log-out"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
               ) : (
-                <CommonButton
-                  text="Login"
-                  className="ms-2 login_btn rounded-5"
+                <button
+                  className="ms-2 login_btn rounded-5 log-out"
                   onClick={handleLoginClick}
-                />
+                >
+                  Login
+                </button>
               )}
             </div>
           </div>

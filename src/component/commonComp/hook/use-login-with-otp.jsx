@@ -35,6 +35,7 @@ export const useLoginWithOtp = (setStep, onClose) => {
         onClose(true);
         localStorage.setItem("sessionToken", response.data.token);
         localStorage.setItem("userInfo", JSON.stringify(response.data.userId));
+        window.location.reload();
       } else {
         toast.error(response.message || "Invalid OTP");
       }

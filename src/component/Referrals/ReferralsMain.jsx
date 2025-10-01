@@ -11,7 +11,7 @@ const ReferralsMain = () => {
             <div className="row">
               <div className="col-md-3 offset-md-3">
                 <div className="stats_section_card stats_bg-primary">
-                  <div class="text-white">
+                  <div className="text-white">
                     <h2>42</h2>
                     <div className="underline bg-white"></div>
                     <p>All Referrals</p>

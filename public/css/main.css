@@ -130,7 +130,7 @@ body {
 }
 .nav-item a {
     font-weight: 400;
-    font-size: 1.1rem;
+    font-size: 15px;
     line-height: 100%;
     vertical-align: middle;
     text-transform: capitalize;
@@ -3090,4 +3090,8 @@ textarea::placeholder {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.log-out {
+    font-size: 15px;
 }
