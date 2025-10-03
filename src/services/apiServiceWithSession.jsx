@@ -43,7 +43,6 @@ export async function apiServiceWithSession(
     };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      // Handle unauthorized token
       if (error.response?.status === 401 || error.response?.status === 403) {
         console.log("Token expired or unauthorized access detected");
         localStorage.removeItem("sessionToken");

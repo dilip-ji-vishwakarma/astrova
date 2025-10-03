@@ -28,7 +28,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [navigate]);
@@ -61,13 +61,13 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/blog-detail" element={<BlogDetails />} />
         <Route
-  path="/my-profile"
-  element={
-    <ProtectedRoute>
-      <MyProfile />
-    </ProtectedRoute>
-  }
-/>
+          path={"/my-profile"}
+          element={
+            <ProtectedRoute>
+              <MyProfile/>
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/daily-panchang"
           element={<div>Daily Panchang Page</div>}

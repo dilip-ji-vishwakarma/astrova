@@ -3077,3 +3077,21 @@ textarea::placeholder {
 .log-out {
     font-size: 15px;
 }
+
+.multiselect-design {
+    display: flex;
+    width: 100% !important;
+    padding: 10px;
+    border-color: #ffc107 !important;
+}
+
+ul.p-multiselect-items.p-component {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+li.p-multiselect-item {
+    gap: 10px;
+}
