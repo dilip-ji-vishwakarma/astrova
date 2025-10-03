@@ -94,7 +94,11 @@ const handleOtpSubmit = async () => {
               <div className="login_popup_login_btn">
                 <button type="submit">
                   {isSubmitting ? (
-                    <span className="spinner"></span>
+                     <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                   ) : (
                     <span>Get OTP</span>
                   )}
@@ -126,7 +130,11 @@ const handleOtpSubmit = async () => {
 
             <div className="login_popup_login_btn">
               <button type="button" onClick={handleOtpSubmit}>
-                {otpLoading ? <span className="spinner"></span> : <span>Verify OTP</span>}
+                {otpLoading ?  <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span> : <span>Verify OTP</span>}
               </button>
             </div>
 

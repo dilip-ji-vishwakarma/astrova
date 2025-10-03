@@ -8,6 +8,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,11 +34,17 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("sessionToken");
-    localStorage.removeItem("userInfo");
-    setIsLoggedIn(false);
-    navigate("/");
+    setIsLoggingOut(true); // 🔹 loader start
+
+    setTimeout(() => {
+      localStorage.removeItem("sessionToken");
+      localStorage.removeItem("userId");
+      setIsLoggingOut(false); // 🔹 loader stop
+      setIsLoggedIn(false);
+      navigate("/");
+    }, 2000); // 2 second delay
   };
+
 
   return (
     <>
@@ -195,8 +202,17 @@ const Header = () => {
                 <button
                   className="ms-2 login_btn rounded-5 log-out"
                   onClick={handleLogout}
+                  disabled={isLoggingOut} 
                 >
-                  Logout
+                  {isLoggingOut ? (
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  ) : (
+                    "Logout"
+                  )}
                 </button>
               ) : (
                 <button

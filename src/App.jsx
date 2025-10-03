@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import "../public/css/main.css";
 import "../public/css/responsive.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js"; 
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Header from "./component/Header";
 import HomeMain from "./component/home/HomeMain";
 import Footer from "./component/Footer";
@@ -23,6 +23,8 @@ import PujaBookDetails from "./component/Puja/PujaBookDetails";
 import Checkout from "./component/Puja/checkout/Checkout";
 import BlogDetails from "./component/home/Blog/BlogDetails";
 import AstrologerList from "./component/Astrologers/AstrologerList";
+import { MyProfile } from "./component/Profile/my-profile";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   const navigate = useNavigate();
@@ -58,7 +60,14 @@ function App() {
         <Route path="/puja-booking" element={<PujaBookDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/blog-detail" element={<BlogDetails />} />
-
+        <Route
+  path="/my-profile"
+  element={
+    <ProtectedRoute>
+      <MyProfile />
+    </ProtectedRoute>
+  }
+/>
         <Route
           path="/daily-panchang"
           element={<div>Daily Panchang Page</div>}

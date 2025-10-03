@@ -4,16 +4,12 @@ import { apiServiceWithSession } from "../../../services/apiServiceWithSession";
 export const useLoginWithOtp = (setStep, onClose) => {
   const requestOtp = async (data) => {
     try {
-      const response = await apiServiceWithSession(
-        "/auth/request-otp",
-        "post",
-        {
-          phone: data.phone,
-        }
-      );
+      const response = await apiServiceWithSession("/auth/request-otp", "post", {
+        phone: data.phone,
+      });
 
       if (response.success) {
-        setStep("otp"); 
+        setStep("otp");
         toast.success("OTP sent successfully!");
       } else {
         toast.error(response.message || "Failed to send OTP");
@@ -32,10 +28,11 @@ export const useLoginWithOtp = (setStep, onClose) => {
 
       if (response.success) {
         toast.success("Login successful!");
-        onClose(true);
         localStorage.setItem("sessionToken", response.data.token);
         localStorage.setItem("userInfo", JSON.stringify(response.data.userId));
-        window.location.reload();
+
+        onClose?.(true);
+        window.location.href = "/my-profile";
       } else {
         toast.error(response.message || "Invalid OTP");
       }
@@ -44,11 +41,6 @@ export const useLoginWithOtp = (setStep, onClose) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("sessionToken");
-    localStorage.removeItem("userInfo");
-    window.location.href = "/";
-  };
 
-  return { requestOtp, verifyOtp, logout };
+  return { requestOtp, verifyOtp };
 };
