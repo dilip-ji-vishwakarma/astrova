@@ -3095,3 +3095,7 @@ ul.p-multiselect-items.p-component {
 li.p-multiselect-item {
     gap: 10px;
 }
+
+.wallet-balance-card {
+    background-color: #000000;
+}
