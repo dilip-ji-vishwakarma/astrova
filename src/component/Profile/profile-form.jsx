@@ -4,8 +4,16 @@ import PhoneInput from "react-phone-input-2";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import { languageOptions } from "../../services/option";
 import { useProfileMutations } from "./hook/use-profile-mutations";
+import { useState } from "react";
+import PaymentComponent from "../../services/PaymentComponent";
 
 export const ProfileForm = ({ data }) => {
   const {
@@ -17,20 +25,76 @@ export const ProfileForm = ({ data }) => {
     inputClass,
   } = useProfileMutations(data);
 
+  const [showAddMoney, setShowAddMoney] = useState(false);
+  const [amount, setAmount] = useState("");
+
   return (
     <>
+      <Dialog
+        open={showAddMoney}
+        onClose={() => setShowAddMoney(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Add Money to Wallet</DialogTitle>
+        <DialogContent>
+          <div className="mb-3 flex gap-2 flex-wrap">
+            {[100, 200, 500, 1000, 2000].map((val) => (
+              <button
+                key={val}
+                className={`px-4 py-2 rounded-lg border ${
+                  amount === val
+                    ? "bg-blue text-white"
+                    : "bg-gray-100 text-black"
+                }`}
+                onClick={() => setAmount(val)}
+                disabled={val > 2000}
+              >
+                ₹{val}
+              </button>
+            ))}
+          </div>
+          <TextField
+            fullWidth
+            type="number"
+            label="Enter Amount (Max ₹2000)"
+            value={amount}
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              if (val <= 2000) setAmount(val);
+            }}
+            margin="dense"
+            inputProps={{ max: 2000 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowAddMoney(false)} color="secondary">
+            Cancel
+          </Button>
+           <PaymentComponent data={data} amount={amount} />
+        </DialogActions>
+      </Dialog>
       <div className="d-flex align-items-center justify-content-between container wallet-balance-card flex items-center justify-between p-4 rounded-2xl shadow-md bg-gradient-to-r from-teal-400 to-blue-500 text-white mb-6">
         <div className="flex items-center gap-3">
-            <p className="text-sm opacity-80">Wallet Balance</p>
-            <h2 className="text-2xl font-bold">
-              ₹{data.walletBalance || "0.00"}
-            </h2>
+          <p className="text-sm opacity-80">Wallet Balance</p>
+          <h2 className="text-2xl font-bold">
+            ₹{data.walletBalance || "0.00"}
+          </h2>
         </div>
-        <div className="flex gap-2">
-          <button className="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold shadow-sm hover:bg-gray-100">
-            Add Money
-          </button>
-        </div>
+        {data.email && data.phone && data.firstName && data.lastName ? (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowAddMoney(true)}
+              className="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold shadow-sm hover:bg-gray-100"
+            >
+              Add Money
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm opacity-80">
+            Complete your profile to add money
+          </p>
+        )}
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="container mb-5 mt-5">
         <div className="login-form mb-4">

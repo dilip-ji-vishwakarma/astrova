@@ -34,6 +34,7 @@ export const useLoginWithOtp = (setStep, onClose) => {
         localStorage.setItem("userInfo", JSON.stringify(response.data.userId));
         onClose?.(true);
         navigate("/my-profile");
+        window.location.reload();
       } else {
         toast.error(response.message || "Invalid OTP");
       }
