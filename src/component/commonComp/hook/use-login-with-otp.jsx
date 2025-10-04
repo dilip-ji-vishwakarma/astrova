@@ -1,7 +1,9 @@
 import { toast } from "sonner";
 import { apiServiceWithSession } from "../../../services/apiServiceWithSession";
+import { useNavigate } from "react-router-dom";
 
 export const useLoginWithOtp = (setStep, onClose) => {
+  const navigate = useNavigate();
   const requestOtp = async (data) => {
     try {
       const response = await apiServiceWithSession("/auth/request-otp", "post", {
@@ -30,9 +32,8 @@ export const useLoginWithOtp = (setStep, onClose) => {
         toast.success("Login successful!");
         localStorage.setItem("sessionToken", response.data.token);
         localStorage.setItem("userInfo", JSON.stringify(response.data.userId));
-
         onClose?.(true);
-        window.location.href = "/my-profile";
+        navigate("/my-profile");
       } else {
         toast.error(response.message || "Invalid OTP");
       }
