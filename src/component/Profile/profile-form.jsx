@@ -12,22 +12,44 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { languageOptions } from "../../services/option";
 import { useProfileMutations } from "./hook/use-profile-mutations";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentComponent from "../../services/PaymentComponent";
 import { getImageUrl } from "../../utils/getImageUrl";
+import { DataTable } from "./DataTable";
+import { apiServiceWithSession } from "../../services/apiServiceWithSession";
+import { payments_history } from "../../utils/api-endpoints";
+import { toast } from "sonner";
 
-export const ProfileForm = ({ data }) => {
-  const {
-    onSubmit,
-    control,
-    handleSubmit,
-    isSubmitting,
-    inputClass,
-  } = useProfileMutations();
+export const ProfileForm = ({ data = {}, }) => {
+  const { onSubmit, control, handleSubmit, isSubmitting, inputClass } =
+    useProfileMutations();
 
   const [showAddMoney, setShowAddMoney] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [amount, setAmount] = useState("");
-  const [preview, setPreview] = useState(getImageUrl(data.avatarUrl) || null);
+  const [preview, setPreview] = useState(getImageUrl(data?.avatarUrl) || null);
+ const [history, setHistory] = useState(null);
+  const [loading, setLoading] = useState(true); 
+  useEffect(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await apiServiceWithSession(payments_history, "get");
+  
+          if (response.success) {
+            setHistory(response);
+          } else {
+            toast.error(response.message);
+          }
+        } catch (err) {
+          toast.error(err.message || "An error occurred");
+        } finally {
+          setLoading(false); 
+        }
+      };
+  
+      fetchData();
+    }, []);
 
 
   return (
@@ -73,23 +95,49 @@ export const ProfileForm = ({ data }) => {
           <Button onClick={() => setShowAddMoney(false)} color="secondary">
             Cancel
           </Button>
-           <PaymentComponent data={data} amount={amount} />
+          <PaymentComponent data={data} amount={amount} />
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={showHistory}
+        onClose={() => setShowHistory(false)}
+        fullWidth
+        maxWidth="lg"
+      >
+        <DialogTitle>Payment History</DialogTitle>
+        <DialogContent>
+          {loading ? <p>Loading...</p> : <DataTable history={history} />}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            className="ms-2 login_btn rounded-5 log-out text-black font-semibold"
+            onClick={() => setShowHistory(false)}
+            color="secondary"
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
       <div className="d-flex align-items-center justify-content-between container wallet-balance-card flex items-center justify-between p-4 rounded-2xl shadow-md bg-gradient-to-r from-teal-400 to-blue-500 text-white mb-6">
         <div className="flex items-center gap-3">
           <p className="text-sm opacity-80">Wallet Balance</p>
           <h2 className="text-2xl font-bold">
-            ₹{data.walletBalance || "0.00"}
+            ₹{data?.walletBalance || "0.00"}
           </h2>
         </div>
         {data.email && data.phone && data.firstName && data.lastName ? (
-          <div className="flex gap-2">
+          <div className="gap-2" style={{ display: "flex" }}>
             <button
               onClick={() => setShowAddMoney(true)}
               className="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold shadow-sm hover:bg-gray-100"
             >
               Add Money
+            </button>
+            <button
+              onClick={() => setShowHistory(true)}
+              className="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold shadow-sm hover:bg-gray-100"
+            >
+              Payment History
             </button>
           </div>
         ) : (
@@ -404,44 +452,44 @@ export const ProfileForm = ({ data }) => {
           />
         </div>
         <div className="login-form mb-4">
-  <label>Image</label>
-  <Controller
-    name="avatarUrl"
-    control={control}
-    defaultValue={data.avatarUrl || null}
-    render={({ field: { onChange } }) => (
-      <>
-        <input
-          type="file"
-          accept="image/*"
-          className="form-control bg-transparent text-body placeholder-muted-foreground border border-input rounded-md h-9 px-3 py-1 text-base shadow-sm transition focus:outline-none focus:ring-3 focus:ring-primary focus:ring-opacity-50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input-30 dark:text-body dark:disabled:opacity-50 dark:border-input"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            if (file) {
-              onChange(file);
-              setPreview(URL.createObjectURL(file)); // Show local preview
-            }
-          }}
-        />
+          <label>Image</label>
+          <Controller
+            name="avatarUrl"
+            control={control}
+            defaultValue={data.avatarUrl || null}
+            render={({ field: { onChange } }) => (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-control bg-transparent text-body placeholder-muted-foreground border border-input rounded-md h-9 px-3 py-1 text-base shadow-sm transition focus:outline-none focus:ring-3 focus:ring-primary focus:ring-opacity-50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input-30 dark:text-body dark:disabled:opacity-50 dark:border-input"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      onChange(file);
+                      setPreview(URL.createObjectURL(file)); // Show local preview
+                    }
+                  }}
+                />
 
-        {preview && (
-          <div className="mt-2">
-            <img
-              src={preview}
-              alt="Preview"
-              style={{
-                width: "150px",
-                height: "150px",
-                objectFit: "cover",
-                borderRadius: "8px",
-              }}
-            />
-          </div>
-        )}
-      </>
-    )}
-  />
-</div>
+                {preview && (
+                  <div className="mt-2">
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+          />
+        </div>
         <div className="login_popup_login_btn">
           <button type="submit">
             {isSubmitting ? (

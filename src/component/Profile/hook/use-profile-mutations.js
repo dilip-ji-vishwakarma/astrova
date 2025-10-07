@@ -10,32 +10,49 @@ export const useProfileMutations = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-
   const onSubmit = async (formdata) => {
     try {
+      const profileData = { ...formdata };
+      delete profileData.avatarUrl; 
+
+      const profileResponse = await apiServiceWithSession(
+        user_profile,
+        "put",
+        profileData
+      );
+
+      if (!profileResponse.success) {
+        toast.error(profileResponse.message || "Failed to update profile");
+        return;
+      }
+
+      toast.success("Profile updated successfully");
       if (formdata.avatarUrl instanceof File) {
         const avatarForm = new FormData();
-        avatarForm.append("avatar", formdata.avatarUrl);
+        avatarForm.append("file", formdata.avatarUrl);
 
         const avatarResponse = await apiServiceWithSession(
-          `${user_profile}/avatar`,
+          '/me/avatar',
           "put",
           avatarForm
         );
 
         if (avatarResponse.success && avatarResponse.data?.url) {
-          formdata.avatarUrl = avatarResponse.data.url;
-        } else {
-          toast.error(avatarResponse.message || "Failed to upload avatar");
-          return;
-        }
-      }
-      const response = await apiServiceWithSession(user_profile, "put", formdata);
+          // Step 3️⃣ - Update profile with new image URL
+          const updateAvatarResponse = await apiServiceWithSession(
+            user_profile,
+            "put",
+            { avatarUrl: avatarResponse.data.url }
+          );
 
-      if (response.success) {
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
+          if (updateAvatarResponse.success) {
+            toast.success("Profile image updated successfully");
+          } else {
+            toast.error(updateAvatarResponse.message || "Failed to update avatar URL");
+          }
+        } else {
+          toast.error(avatarResponse.message || "Failed to upload image");
+        }
       }
     } catch (err) {
       toast.error(err.message || "An error occurred");

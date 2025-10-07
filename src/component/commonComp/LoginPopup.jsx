@@ -20,15 +20,16 @@ const LoginPopup = ({ onClose }) => {
   const { requestOtp, verifyOtp } = useLoginWithOtp(setStep, onClose);
 
   const handleMobileSubmit = async (data) => {
-    setPhoneNumber(data.phone);
-    await requestOtp(data);
-  };
-
-const handleOtpSubmit = async () => {
-  setOtpLoading(true); 
-  await verifyOtp(phoneNumber, otp);
-  setOtpLoading(false); 
+  const formattedPhone = `+${data.phone}`; // ✅ add plus sign
+  setPhoneNumber(formattedPhone);
+  await requestOtp({ phone: formattedPhone });
 };
+const handleOtpSubmit = async () => {
+  setOtpLoading(true);
+  await verifyOtp(phoneNumber, otp);
+  setOtpLoading(false);
+};
+
 
 
   const handleOtpChange = (index, value) => {
