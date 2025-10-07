@@ -14,6 +14,7 @@ import { languageOptions } from "../../services/option";
 import { useProfileMutations } from "./hook/use-profile-mutations";
 import { useState } from "react";
 import PaymentComponent from "../../services/PaymentComponent";
+import { getImageUrl } from "../../utils/getImageUrl";
 
 export const ProfileForm = ({ data }) => {
   const {
@@ -21,12 +22,13 @@ export const ProfileForm = ({ data }) => {
     control,
     handleSubmit,
     isSubmitting,
-    avatarSrc,
     inputClass,
-  } = useProfileMutations(data);
+  } = useProfileMutations();
 
   const [showAddMoney, setShowAddMoney] = useState(false);
   const [amount, setAmount] = useState("");
+  const [preview, setPreview] = useState(getImageUrl(data.avatarUrl) || null);
+
 
   return (
     <>
@@ -402,36 +404,44 @@ export const ProfileForm = ({ data }) => {
           />
         </div>
         <div className="login-form mb-4">
-          <label>Image</label>
-          <Controller
-            name="avatarUrl"
-            control={control}
-            defaultValue={data.avatarUrl || null}
-            render={({ field: { onChange } }) => (
-              <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="form-control bg-transparent text-body placeholder-muted-foreground border border-input rounded-md h-9 px-3 py-1 text-base shadow-sm transition focus:outline-none focus:ring-3 focus:ring-primary focus:ring-opacity-50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input-30 dark:text-body dark:disabled:opacity-50 dark:border-input"
-                  onChange={(e) => onChange(e.target.files[0])}
-                />
-                <div className="mt-2">
-                  <img
-                    src={avatarSrc}
-                    alt="Preview"
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                    }}
-                  />
-                </div>
-              </>
-            )}
-          />
-        </div>
+  <label>Image</label>
+  <Controller
+    name="avatarUrl"
+    control={control}
+    defaultValue={data.avatarUrl || null}
+    render={({ field: { onChange } }) => (
+      <>
+        <input
+          type="file"
+          accept="image/*"
+          className="form-control bg-transparent text-body placeholder-muted-foreground border border-input rounded-md h-9 px-3 py-1 text-base shadow-sm transition focus:outline-none focus:ring-3 focus:ring-primary focus:ring-opacity-50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input-30 dark:text-body dark:disabled:opacity-50 dark:border-input"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              onChange(file);
+              setPreview(URL.createObjectURL(file)); // Show local preview
+            }
+          }}
+        />
 
+        {preview && (
+          <div className="mt-2">
+            <img
+              src={preview}
+              alt="Preview"
+              style={{
+                width: "150px",
+                height: "150px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
+            />
+          </div>
+        )}
+      </>
+    )}
+  />
+</div>
         <div className="login_popup_login_btn">
           <button type="submit">
             {isSubmitting ? (

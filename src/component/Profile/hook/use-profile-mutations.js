@@ -1,24 +1,15 @@
 import { toast } from "sonner";
 import { apiServiceWithSession } from "../../../services/apiServiceWithSession";
 import { useForm } from "react-hook-form";
+import { user_profile } from "../../../utils/api-endpoints";
 
-export const useProfileMutations = (data) => {
+export const useProfileMutations = () => {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const avatarFile = watch("avatarUrl");
-
-  const avatarSrc = avatarFile
-    ? typeof avatarFile === "string"
-      ? avatarFile
-      : URL.createObjectURL(avatarFile)
-    : data.avatarUrl
-    ? data.avatarUrl.startsWith("http")
-    : `https://astrova-backend-t1zo.onrender.com${data.avatarUrl}`;
 
   const onSubmit = async (formdata) => {
     try {
@@ -27,7 +18,7 @@ export const useProfileMutations = (data) => {
         avatarForm.append("avatar", formdata.avatarUrl);
 
         const avatarResponse = await apiServiceWithSession(
-          "/me/avatar",
+          `${user_profile}/avatar`,
           "put",
           avatarForm
         );
@@ -39,7 +30,7 @@ export const useProfileMutations = (data) => {
           return;
         }
       }
-      const response = await apiServiceWithSession("/me", "put", formdata);
+      const response = await apiServiceWithSession(user_profile, "put", formdata);
 
       if (response.success) {
         toast.success(response.message);
@@ -61,7 +52,6 @@ export const useProfileMutations = (data) => {
     control,
     handleSubmit,
     isSubmitting,
-    avatarSrc,
     inputClass,
   };
 };

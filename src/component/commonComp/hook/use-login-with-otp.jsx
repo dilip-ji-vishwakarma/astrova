@@ -1,12 +1,13 @@
 import { toast } from "sonner";
 import { apiServiceWithSession } from "../../../services/apiServiceWithSession";
 import { useNavigate } from "react-router-dom";
+import { request_otp, verify_otp } from "../../../utils/api-endpoints";
 
 export const useLoginWithOtp = (setStep, onClose) => {
   const navigate = useNavigate();
   const requestOtp = async (data) => {
     try {
-      const response = await apiServiceWithSession("/auth/request-otp", "post", {
+      const response = await apiServiceWithSession(request_otp, "post", {
         phone: data.phone,
       });
 
@@ -23,7 +24,7 @@ export const useLoginWithOtp = (setStep, onClose) => {
 
   const verifyOtp = async (phone, otp) => {
     try {
-      const response = await apiServiceWithSession("/auth/verify-otp", "post", {
+      const response = await apiServiceWithSession(verify_otp, "post", {
         phone,
         otp: otp.join(""),
       });

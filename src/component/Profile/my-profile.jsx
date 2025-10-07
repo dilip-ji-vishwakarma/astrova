@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { apiServiceWithSession } from "../../services/apiServiceWithSession";
 import HeaderBreadcrumb from "../HeaderBreadcrumb";
 import { ProfileForm } from "./profile-form";
+import { user_profile } from "../../utils/api-endpoints";
 
 export const MyProfile = () => {
   const [data, setData] = useState(null);
@@ -12,12 +13,12 @@ export const MyProfile = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await apiServiceWithSession("/me", "get");
+        const response = await apiServiceWithSession(user_profile, "get");
 
         if (response.success) {
           setData(response.data);
         } else {
-          toast.error(response.message || "Invalid OTP");
+          toast.error(response.message);
         }
       } catch (err) {
         toast.error(err.message || "An error occurred");
