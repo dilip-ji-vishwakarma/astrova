@@ -25,6 +25,7 @@ import BlogDetails from "./component/home/Blog/BlogDetails";
 import AstrologerList from "./component/Astrologers/AstrologerList";
 import { MyProfile } from "./component/Profile/my-profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import { AstrologerProfile } from "./component/home/LiveAstrologers/hook/AstrologerProfile";
 
 function App() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ function App() {
         <Route path="/astro-details" element={<AstroDetails />} />
         <Route path="/send-gift" element={<SendGift />} />
         <Route path="/all-astrologer" element={<AstrologerList />} />
+        <Route path="/astrologer/:id" element={<AstrologerProfile />} />
         <Route
           path="/chat-with-astrologer"
           element={<AstrologerListPage type="chat" />}

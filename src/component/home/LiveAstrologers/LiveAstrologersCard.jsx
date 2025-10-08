@@ -1,11 +1,7 @@
-import  { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import CommonButton from "../../commonComp/CommonButton";
-import { AiOutlinePlus } from "react-icons/ai";
 import { getImageUrl } from "../../../utils/getImageUrl";
-import { useFollowMutations } from "./hook/use-follow-mutations";
 
 const responsive = {
   desktop: {
@@ -26,16 +22,6 @@ const responsive = {
 };
 
 const LiveAstrologersCard = ({ data }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { handleFollow, loading } = useFollowMutations();
-  useEffect(() => {
-    const token = localStorage.getItem("sessionToken");
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
   const liveAstrologers = data.filter((astro) => astro.isLive);
   if (liveAstrologers.length === 0) {
     return (
@@ -71,24 +57,9 @@ const LiveAstrologersCard = ({ data }) => {
               <h3>
                 {astro.firstName} {astro.lastName}
               </h3>
-              {isLoggedIn &&
-                (loading === astro.id ? (
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                ) : (
-                  <CommonButton
-                    onClick={() => handleFollow(astro.id)}
-                    text="Follow"
-                    iconLeft={AiOutlinePlus}
-                    className=""
-                  />
-                ))}
             </div>
             <div className="astro_Watch_Now_div">
-              <Link to="/">Watch Now</Link>
+              <Link to={`/astrologer/${astro.id}`}>View More</Link>
             </div>
           </div>
         </div>
