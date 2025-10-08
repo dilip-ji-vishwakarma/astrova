@@ -14,6 +14,7 @@ import WhatAstrova from "./WhatAstrova/WhatAstrova";
 import WhyAstrova from "./WhyAstrova/WhyAstrova";
 import { apiService } from "../../services/apiService";
 import { toast } from "sonner";
+import { dashboard } from "../../utils/api-endpoints";
 
 const HomeMain = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ const HomeMain = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const response = await apiService("/dashboard", "get");
+        const response = await apiService(dashboard, "get");
 
         if (response?.success) {
           setData(response.data);

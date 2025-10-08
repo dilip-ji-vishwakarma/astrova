@@ -42,6 +42,7 @@ const Header = () => {
       setIsLoggingOut(false); // 🔹 loader stop
       setIsLoggedIn(false);
       navigate("/");
+      window.location.reload()
     }, 2000); // 2 second delay
   };
 

@@ -3,7 +3,7 @@ import LiveAstrologersCard from "./LiveAstrologersCard";
 import { FaArrowRight } from "react-icons/fa";
 import SectionHeader from "../../commonComp/SectionHeader";
 
-const LiveAstrologersMain = () => {
+const LiveAstrologersMain = ({data}) => {
   return (
     <div className="container">
       <SectionHeader
@@ -12,7 +12,7 @@ const LiveAstrologersMain = () => {
         linkTo="/live-astrologers"
         Icon={FaArrowRight}
       />
-      <LiveAstrologersCard />
+      <LiveAstrologersCard  data={data}/>
     </div>
   );
 };
