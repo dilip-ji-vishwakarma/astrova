@@ -1,19 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRazorpay } from "react-razorpay";
 import { apiServiceWithSession } from "./apiServiceWithSession";
 import { toast } from "sonner";
 
 const PaymentComponent = ({ data, amount }) => {
   const { error, isLoading, Razorpay } = useRazorpay();
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
   const fullName = `${data.firstName} ${data.lastName}`;
 
   const handlePayment = async () => {
     try {
-        const amountInPaisa = Number(amount) * 100;
-      const response = await apiServiceWithSession("/api/create-order", "POST", {
-        amount: amountInPaisa,
-        userId: data.userId,
-      });
+      const amountInPaisa = Number(amount) * 100;
+
+      const response = await apiServiceWithSession(
+        "/api/create-order",
+        "POST",
+        {
+          amount: amountInPaisa,
+          userId: data.userId,
+        }
+      );
 
       const { order_id } = await response;
       const options = {
@@ -25,6 +31,10 @@ const PaymentComponent = ({ data, amount }) => {
         order_id: order_id,
         handler: async function (rzpResponse) {
           console.log("Payment successful:", rzpResponse);
+
+          // Start showing processing message
+          setPaymentProcessing(true);
+
           const payload = {
             userId: data.id,
             amount: amount,
@@ -41,14 +51,19 @@ const PaymentComponent = ({ data, amount }) => {
               "POST",
               payload
             );
-            window.location.reload();
+
+            setPaymentProcessing(false); // stop loader
+
             if (saveResponse.success) {
               toast.success(saveResponse.message);
+              window.location.reload();
             } else {
-              toast.success(saveResponse.message);
+              toast.error(saveResponse.message);
             }
           } catch (err) {
+            setPaymentProcessing(false);
             console.error("Error saving payment:", err);
+            toast.error("Failed to process payment. Please contact support.");
           }
         },
         prefill: {
@@ -65,6 +80,7 @@ const PaymentComponent = ({ data, amount }) => {
       }
     } catch (err) {
       console.error("Payment initiation failed:", err);
+      toast.error("Unable to initiate payment. Try again later.");
     }
   };
 
@@ -76,15 +92,19 @@ const PaymentComponent = ({ data, amount }) => {
         aria-hidden="true"
       ></span>
     );
+
   if (error) return <div>Error loading Razorpay: {error.message}</div>;
 
   return (
-    <button
-      className="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold shadow-sm hover:bg-gray-100"
-      onClick={handlePayment}
-    >
-      Add Money
-    </button>
+    <div>
+        <button
+          className="px-4 py-2 rounded-lg bg-white text-indigo-600 font-semibold shadow-sm hover:bg-gray-100"
+          onClick={handlePayment}
+          disabled={paymentProcessing}
+        >
+          {paymentProcessing ? "Payment Processing..." : "Add Money"}
+        </button>
+    </div>
   );
 };
 
