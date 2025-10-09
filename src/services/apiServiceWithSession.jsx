@@ -47,7 +47,7 @@ export async function apiServiceWithSession(
         console.log("Token expired or unauthorized access detected");
         localStorage.removeItem("sessionToken");
         localStorage.removeItem("userInfo");
-        window.location.href = "/login";
+        window.location.href = "/";
       }
 
       // Server unreachable

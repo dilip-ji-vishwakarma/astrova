@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CommonButton from "./commonComp/CommonButton";
 import LoginPopup from "./commonComp/LoginPopup";
 
 const Header = () => {

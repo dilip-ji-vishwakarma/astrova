@@ -25,7 +25,7 @@ import BlogDetails from "./component/home/Blog/BlogDetails";
 import AstrologerList from "./component/Astrologers/AstrologerList";
 import { MyProfile } from "./component/Profile/my-profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import { AstrologerProfile } from "./component/home/LiveAstrologers/hook/AstrologerProfile";
+import { AstrologerProfile } from "./component/home/LiveAstrologers/AstrologerProfile";
 
 function App() {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ function App() {
           path="/talk-with-astrologer"
           element={<AstrologerListPage type="call" />}
         />
-        <Route path="/live-astrologers" element={<LiveTabsComponent />} />
+        {/* <Route path="/live-astrologers" element={<LiveTabsComponent />} /> */}
         <Route path="/history" element={<HistroryMain />} />
         <Route path="/product-detail/:id" element={<HistoryProductDetails />} />
 

@@ -1,34 +1,14 @@
-import  { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiService } from "../../../../services/apiService";
-import { astrologer_details } from "../../../../utils/api-endpoints";
-import { toast } from "sonner";
-import { getImageUrl } from "../../../../utils/getImageUrl";
+import { getImageUrl } from "../../../utils/getImageUrl";
+import CommonButton from "../../commonComp/CommonButton";
+import { AiOutlinePlus } from "react-icons/ai";
+import { useFollowMutations } from "./hook/use-follow-mutations";
 
 export const AstrologerProfile = () => {
   const { id } = useParams();
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    const fetchAstrologerDetails = async () => {
-      try {
-        setLoading(true);
-        const response = await apiService(`${astrologer_details}/${id}`, "get");
-        if (response?.success) {
-          setData(response.data);
-        } else {
-          toast.error(response?.message || "Failed to load astrologer data");
-        }
-      } catch (error) {
-        console.error("Error fetching astrologer details:", error);
-        toast.error("Something went wrong while fetching data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAstrologerDetails();
-  }, [id]);
+  const { handleFollow, loadding, loading, data, isLoggedIn , handleUnFollow} = useFollowMutations({id});
+
 
   if (loading) {
     return (
@@ -94,6 +74,33 @@ export const AstrologerProfile = () => {
                   ></span>
                   <span className="text-danger fw-semibold">Offline</span>
                 </div>
+              )}
+            </div>
+            <div className="mt-5">
+              {isLoggedIn && (
+              loadding ? (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              ) : (
+                data.isFollowed ? (
+                <CommonButton
+                  onClick={() => handleUnFollow(data.id)}
+                  text="UnFollow"
+                  iconLeft={AiOutlinePlus}
+                  className="follow_btn"
+                />
+                ) : (
+                  <CommonButton
+                  onClick={() => handleFollow(data.id)}
+                  text="Follow"
+                  iconLeft={AiOutlinePlus}
+                  className="follow_btn"
+                />
+                )
+              )
               )}
             </div>
           </div>

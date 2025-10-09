@@ -9,7 +9,7 @@ const LiveAstrologersMain = ({data}) => {
       <SectionHeader
         title="Live Astrologers"
         linkText="View All"
-        linkTo="/live-astrologers"
+        linkTo="/all-astrologer"
         Icon={FaArrowRight}
       />
       <LiveAstrologersCard  data={data}/>
