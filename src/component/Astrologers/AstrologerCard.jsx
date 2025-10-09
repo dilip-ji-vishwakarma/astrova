@@ -3,6 +3,7 @@ import ChatButtons from "../AstrologerList/ChatButtons";
 import { getImageUrl } from "../../utils/getImageUrl";
 
 const AstrologerCard = ({ data, type }) => {
+  if (!data) return null;
   return (
     <div className="col-md-6">
       <div className="card shadow-sm h-100">

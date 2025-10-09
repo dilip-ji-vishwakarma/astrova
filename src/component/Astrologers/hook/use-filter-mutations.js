@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { astrologer_list } from "../../../utils/api-endpoints";
 import { apiService } from "../../../services/apiService";
 import { toast } from "sonner";
@@ -18,7 +18,6 @@ export const useFilterMutations = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [selectedSort, setSelectedSort] = useState("Popularity");
-
   const [filters, setFilters] = useState({
     languagesSpoken: "",
     experienceYrs: "",
@@ -26,14 +25,12 @@ export const useFilterMutations = () => {
     country: "",
     gender: "",
   });
-
   const [filterOptions, setFilterOptions] = useState({
     languagesList: [],
     skills: [],
     gendersList: [],
     categories: [],
   });
-
   const [pagination, setPagination] = useState({
     page: 1,
     total: 0,
@@ -41,7 +38,8 @@ export const useFilterMutations = () => {
     totalPages: 1,
   });
 
-  const fetchAstrologers = async (page = 1) => {
+  // Memoized fetch function to avoid missing dependency warnings
+  const fetchAstrologers = useCallback(async (page = 1) => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -66,31 +64,35 @@ export const useFilterMutations = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedSort, filters]);
 
-  const fetchFilterOptions = async () => {
-    try {
-      const response = await apiService("/astrologer/filter-list", "get");
-      if (response?.success) setFilterOptions(response.data);
-      else toast.error("Failed to load filters");
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong fetching filters");
-    }
-  };
-
+  // Fetch filter options once on mount
   useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        const response = await apiService("/astrologer/filter-list", "get");
+        if (response?.success) setFilterOptions(response.data);
+        else toast.error("Failed to load filters");
+      } catch (err) {
+        console.error(err);
+        toast.error("Something went wrong fetching filters");
+      }
+    };
+
     fetchFilterOptions();
   }, []);
 
+  // Fetch astrologers whenever sort or filters change
   useEffect(() => {
-    fetchAstrologers(1); // reset to first page when filters or sort change
-  });
+    fetchAstrologers(1); // reset to first page
+  }, [fetchAstrologers]);
 
+  // Update a filter value
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
+  // Change page
   const handlePageChange = (page) => {
     fetchAstrologers(page);
   };
@@ -108,4 +110,3 @@ export const useFilterMutations = () => {
     handlePageChange,
   };
 };
-
