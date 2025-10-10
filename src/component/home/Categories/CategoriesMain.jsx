@@ -3,7 +3,8 @@ import CategoriesCard from "./CategoriesCard";
 import SectionHeader from "../../commonComp/SectionHeader";
 import { FaArrowRight } from "react-icons/fa";
 
-const CategoriesMain = () => {
+const CategoriesMain = ({data}) => {
+  
   return (
     <>
       <div className="categories_main_Section bg-light py-md-5 py-4">
@@ -16,7 +17,7 @@ const CategoriesMain = () => {
               Icon={FaArrowRight}
             />
           </div>
-          <CategoriesCard />
+          <CategoriesCard categories={data}/>
         </div>
       </div>
     </>

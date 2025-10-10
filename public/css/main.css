@@ -1095,7 +1095,6 @@ body {
 }
 .categories_card_main .icon_circle img {
     max-width: 60px;
-    filter: invert(44%) sepia(97%) saturate(2226%) hue-rotate(2deg) brightness(101%) contrast(102%);
     padding: 10px;
 }
 .categories_card_main:hover .icon_circle img{
@@ -3235,4 +3234,12 @@ li.p-multiselect-item {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 5; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

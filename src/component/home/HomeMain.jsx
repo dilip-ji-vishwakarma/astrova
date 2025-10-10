@@ -84,8 +84,8 @@ const HomeMain = () => {
       <LiveAstrologersMain data={data?.liveAstrologers} />
       <AstrologersMain data={data?.astrologers} />
       <CategoriesMain data={data?.categories} />
-      <PoojaBookingMain data={data?.poojaBookings} />
-      <CelebrityReviewMain data={data?.celebrityReviews} />
+      <PoojaBookingMain data={data?.poojas} />
+      <CelebrityReviewMain data={data?.celebrities} />
       <CustomerStoriesMain data={data?.customerStories} />
       <NewsMain data={data?.news} />
       <BlogMain data={data?.blogs} />

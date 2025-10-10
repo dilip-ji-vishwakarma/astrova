@@ -20,34 +20,7 @@ const responsive = {
   },
 };
 
-const poojaData = [
-  {
-    id: 1,
-    title: "Angarak Yog Shanti Puja",
-    rate: "₹21000",
-    image: "/assets/image/puja1.png",
-  },
-  {
-    id: 2,
-    title: "Mangal Dosh Nivaran Puja",
-    rate: "₹15000",
-    image: "/assets/image/puja1.png",
-  },
-  {
-    id: 3,
-    title: "Kaal Sarp Dosh Puja",
-    rate: "₹18000",
-    image: "/assets/image/puja1.png",
-  },
-  {
-    id: 4,
-    title: "Navgrah Shanti Anusthan",
-    rate: "₹25000",
-    image: "/assets/image/puja1.png",
-  },
-];
-
-const PoojaBookingMain = () => {
+const PoojaBookingMain = ({data}) => {
   return (
     <div className="pooja_booking_section">
       <div className="container">
@@ -78,12 +51,13 @@ const PoojaBookingMain = () => {
           <div className="col-lg-6 col-md-12 col-sm-12">
             <div className="PoojaBookingCardcol">
               <Carousel responsive={responsive} infinite autoPlay>
-                {poojaData.map((item) => (
+                {data.map((item) => (
                   <PoojaBookingCard
                     key={item.id}
                     title={item.title}
-                    rate={item.rate}
-                    image={item.image}
+                    rate={item.basePrice}
+                    image={item.imageUrl}
+                    description={item.description}
                   />
                 ))}
               </Carousel>

@@ -1,11 +1,9 @@
 // components/BlogCard.jsx
-
-import React from "react";
-import blogData from "./blogData";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CommonButton from "../../commonComp/CommonButton";
 import LinkCommon from "../../commonComp/LinkCommon";
+import { getImageUrl } from "../../../utils/getImageUrl";
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
@@ -21,19 +19,19 @@ const responsive = {
     items: 1,
   },
 };
-const BlogCard = () => {
+const BlogCard = ({blog = []}) => {
   return (
     <>
       <p className="section-subtitle">
         Explore the Universe One Article at a Time
       </p>
       <Carousel responsive={responsive} infinite autoPlay={true}>
-        {blogData.map((item) => (
+        {blog.map((item) => (
           <div className="blog-card">
-            <img src={item.image} alt={item.title} className="blog-image" />
+            <img src={getImageUrl(item.previewImage)} alt={item.title} className="blog-image" />
             <div className="blog-content">
               <h3 className="blog-title">{item.title}</h3>
-              <p className="blog-desc">{item.description}</p>
+              <p className="blog-desc">{item.summary}</p>
               {/* <button className="">Read More</button> */}
               <LinkCommon
                 text="Read More"

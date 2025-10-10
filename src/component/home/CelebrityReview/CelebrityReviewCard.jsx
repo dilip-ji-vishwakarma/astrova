@@ -1,26 +1,7 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-const celebrities = [
-  {
-    id: 1,
-    name: "Priyanka Chopra",
-    image: "/assets/image/cele1.png",
-    message: "Priyanka Chopra has message for You!",
-  },
-  {
-    id: 2,
-    name: "Kajol",
-    image: "/assets/image/cele1.png",
-    message: "Kajol has message for You!",
-  },
-  {
-    id: 3,
-    name: "Priyanka Chopra",
-    image: "/assets/image/cele1.png",
-    message: "Priyanka Chopra has message for You!",
-  },
-];
+import { getImageUrl } from "../../../utils/getImageUrl";
 
 const responsive = {
   desktop: {
@@ -37,7 +18,7 @@ const responsive = {
   },
 };
 
-const CelebrityReviewCard = () => {
+const CelebrityReviewCard = ({celebrities = []}) => {
   return (
     <>
       <div className="">
@@ -50,16 +31,12 @@ const CelebrityReviewCard = () => {
             <div key={celeb?.id} className="celeb-card">
               <div className="card-image">
                 <img
-                  src="/assets/image/logo.png"
-                  alt="logo"
+                  src={getImageUrl(celeb.badgeUrl)}
+                  alt="badge"
                   className="img-fluid cele_logo"
                 />
-                <img src={celeb.image} alt={celeb.name} />
-                <img
-                  src="/assets/images/badge.png"
-                  alt="badge"
-                  className="badge"
-                />
+                <img src={getImageUrl(celeb.photoUrl)} alt={celeb.name} />
+             
               </div>
               <div className="card-text">{celeb.message}</div>
             </div>
