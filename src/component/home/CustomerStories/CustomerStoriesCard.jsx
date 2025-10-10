@@ -1,6 +1,7 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { getImageUrl } from "../../../utils/getImageUrl";
 
 const responsive = {
   desktop: {
@@ -18,44 +19,17 @@ const responsive = {
   },
 };
 
-const reviews = [
-  {
-    id: 1,
-    name: "Rashmi Desai",
-    image: "/assets/image/cutomer.png",
-    rating: 5,
-    review:
-      "My astrologer gave me peace of mind I didn’t know I needed. Will definitely book again!",
-  },
-  {
-    id: 2,
-    name: "Rashmi Desai",
-    image: "/assets/image/cutomer.png",
-    rating: 5,
-    review:
-      "My astrologer gave me peace of mind I didn’t know I needed. Will definitely book again!",
-  },
-  {
-    id: 3,
-    name: "Rashmi Desai",
-    image: "/assets/image/cutomer.png",
-    rating: 5,
-    review:
-      "My astrologer gave me peace of mind I didn’t know I needed. Will definitely book again!",
-  },
-];
-
-const CustomerStoriesCard = () => {
+const CustomerStoriesCard = ({customerStories = []}) => {
   return (
     <div className="customer-section">
       <p className="section-subtitle">
         What Our Customers Say About Their Spiritual Journey
       </p>
       <Carousel responsive={responsive} infinite autoPlay={true}>
-        {reviews.map((r) => (
+        {customerStories.map((r) => (
           <div className="review-card" key={r.id}>
-            <img src={r.image} alt={r.name} className="avatar" />
-            <h3>{r.name}</h3>
+            <img src={getImageUrl(r.user.avatarUrl)} alt={r.user.user} className="avatar" />
+            <h3>{r.user.firstName} {r.user.lastName}</h3>
             <div className="stars">
               {Array(r.rating)
                 .fill()
@@ -63,7 +37,7 @@ const CustomerStoriesCard = () => {
                   <span key={i}>⭐</span>
                 ))}
             </div>
-            <p className="review-text">{r.review}</p>
+            <p className="review-text">{r.description}</p>
           </div>
         ))}
       </Carousel>
