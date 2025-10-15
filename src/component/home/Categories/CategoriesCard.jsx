@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { getImageUrl } from "../../../utils/getImageUrl";
 
@@ -10,7 +9,7 @@ const CategoriesCard = ({ categories }) => {
           {categories.length > 0 ? (
             categories.map((category, index) => (
               <div key={index} className="col-6 col-lg-3 col-md-4 col-sm-6 mb-4">
-                <Link to="#" className="categories_card_main">
+                <Link to={`/all-astrologer?category=${encodeURIComponent(category.name)}`} className="categories_card_main">
                   <div className="icon_circle">
                     <div className="icon-wrapper">
                       <img src={getImageUrl(category.icon)} alt={category.name} />

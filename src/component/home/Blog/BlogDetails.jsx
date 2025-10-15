@@ -1,102 +1,106 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderBreadcrumb from "../../HeaderBreadcrumb";
 import SectionHeader from "../../commonComp/SectionHeader";
+import { useParams } from "react-router-dom";
+import { apiService } from "../../../services/apiService";
+import { blog_details } from "../../../utils/api-endpoints";
+import { formatSingleDate } from "../../../utils/formate-date";
+import { getImageUrl } from "../../../utils/getImageUrl";
 
 const BlogDetails = () => {
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchBlogDetails = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const response = await apiService(`${blog_details}/${id}`, "get");
+
+        if (response?.success && response?.data) {
+          setData(response.data);
+        } else {
+          setError("No blog details found.");
+        }
+      } catch (error) {
+        console.error("Error fetching blog details:", error);
+        setError("Failed to load blog details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchBlogDetails();
+  }, [id]);
+
+  if (loading) return <div className="loader set-height">
+        <div className="box box-1">
+          <div className="side-left"></div>
+          <div className="side-right"></div>
+          <div className="side-top"></div>
+        </div>
+        <div className="box box-2">
+          <div className="side-left"></div>
+          <div className="side-right"></div>
+          <div className="side-top"></div>
+        </div>
+        <div className="box box-3">
+          <div className="side-left"></div>
+          <div className="side-right"></div>
+          <div className="side-top"></div>
+        </div>
+        <div className="box box-4">
+          <div className="side-left"></div>
+          <div className="side-right"></div>
+          <div className="side-top"></div>
+        </div>
+      </div>;
+  if (error) return <p className="text-center text-danger mt-5">{error}</p>;
+  if (!data) return null;
+
   return (
     <>
       <HeaderBreadcrumb />
       <div className="container blog_details_page">
-        <SectionHeader title="Hariyali Teej 2025: Timings, Date, and Rituals" />
+        <SectionHeader title={data.title || "Blog Details"} />
+
         <p className="blog_date">
-          25 Jul, 2025 by <span> Snehil</span>
+          {formatSingleDate(data.createdAt, true)}{" "}
+          <span>{data.publish_by || "Admin"}</span>
         </p>
+
         <div className="row blog_detail_main">
           <div className="col-12">
-            <div className="blog_detail_img">
-              <img
-                src="https://images.hindustantimes.com/img/2024/08/06/550x309/Lead_1722949642225_1722949662733.png"
-                alt="blog"
-                className="img-fluid"
+            {data.coverImage && (
+              <div className="blog_detail_img mb-4">
+                <img
+                  src={getImageUrl(data.coverImage)}
+                  alt={data.title || "Blog Cover"}
+                  className="img-fluid rounded"
+                />
+              </div>
+            )}
+
+            {data.summary && <h3 className="mb-3">{data.summary}</h3>}
+
+            {/* Safely render HTML content */}
+            {data.contentHTML ? (
+              <div
+                className="blog_content"
+                dangerouslySetInnerHTML={{ __html: data.contentHTML }}
               />
-            </div>
-            <h3>Significance of Hariyali Teej </h3>
-            <p>
-              The word "Teej" refers to the third day (Tritiya tithi) of the
-              lunar month following Amavasya, while "Hariyali" means greenery.
-              It symbolizes the color green and the magnificent beauty of nature
-              blooming. In addition, Hariyali Teej is also known as Sindhara
-              Teej. On the auspicious occasion of Hariyali Teej, married women
-              observe fasts and follow Hariyali Teej Puja Vidhi.
-            </p>
-            <p>
-              In addition, they ask for the blessings of Lord Shiva and Goddess
-              Parvati for the husband's long life, happiness, and marital bliss.
-              Even unmarried girls pray to Lord Shiva in hopes of finding
-              suitable husbands in the future. Women typically wear green
-              clothing and adorn themselves with jewelry and hennaed hands.
-              Additionally, there are a variety of customs and rituals that vary
-              depending on the region.{" "}
-            </p>
-            <p>
-              Teej is primarily observed in Uttar Pradesh, Bihar, Rajasthan,
-              Punjab, and Haryana, which are in northern India. Indeed, it is a
-              time when women receive sindhara (gifts) from parents and in-laws,
-              including gorgeous gowns, confections, dry fruits, henna, bangles,
-              makeup, suhaag items and Hariyali Teej Puja Samagri.
-            </p>
+            ) : (
+              <p>No content available.</p>
+            )}
 
-            <h3>Significance of Hariyali Teej </h3>
-            <p>
-              The word "Teej" refers to the third day (Tritiya tithi) of the
-              lunar month following Amavasya, while "Hariyali" means greenery.
-              It symbolizes the color green and the magnificent beauty of nature
-              blooming. In addition, Hariyali Teej is also known as Sindhara
-              Teej. On the auspicious occasion of Hariyali Teej, married women
-              observe fasts and follow Hariyali Teej Puja Vidhi.
-            </p>
-            <p>
-              In addition, they ask for the blessings of Lord Shiva and Goddess
-              Parvati for the husband's long life, happiness, and marital bliss.
-              Even unmarried girls pray to Lord Shiva in hopes of finding
-              suitable husbands in the future. Women typically wear green
-              clothing and adorn themselves with jewelry and hennaed hands.
-              Additionally, there are a variety of customs and rituals that vary
-              depending on the region.{" "}
-            </p>
-            <p>
-              Teej is primarily observed in Uttar Pradesh, Bihar, Rajasthan,
-              Punjab, and Haryana, which are in northern India. Indeed, it is a
-              time when women receive sindhara (gifts) from parents and in-laws,
-              including gorgeous gowns, confections, dry fruits, henna, bangles,
-              makeup, suhaag items and Hariyali Teej Puja Samagri.
-            </p>
-
-            <h3>Significance of Hariyali Teej </h3>
-            <p>
-              The word "Teej" refers to the third day (Tritiya tithi) of the
-              lunar month following Amavasya, while "Hariyali" means greenery.
-              It symbolizes the color green and the magnificent beauty of nature
-              blooming. In addition, Hariyali Teej is also known as Sindhara
-              Teej. On the auspicious occasion of Hariyali Teej, married women
-              observe fasts and follow Hariyali Teej Puja Vidhi.
-            </p>
-            <p>
-              In addition, they ask for the blessings of Lord Shiva and Goddess
-              Parvati for the husband's long life, happiness, and marital bliss.
-              Even unmarried girls pray to Lord Shiva in hopes of finding
-              suitable husbands in the future. Women typically wear green
-              clothing and adorn themselves with jewelry and hennaed hands.
-              Additionally, there are a variety of customs and rituals that vary
-              depending on the region.{" "}
-            </p>
-            <p>
-              Teej is primarily observed in Uttar Pradesh, Bihar, Rajasthan,
-              Punjab, and Haryana, which are in northern India. Indeed, it is a
-              time when women receive sindhara (gifts) from parents and in-laws,
-              including gorgeous gowns, confections, dry fruits, henna, bangles,
-              makeup, suhaag items and Hariyali Teej Puja Samagri.
-            </p>
+            {data.tags && (
+              <p className="mt-4">
+                <strong>Tags:</strong> {data.tags}
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -659,7 +659,7 @@ body {
 }
 
 .astro_card_content_side {
-    margin-left: 28px;
+    padding: 0px 28px;
     width: 100%;
 }
 

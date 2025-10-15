@@ -12,9 +12,6 @@ const CategoriesMain = ({data}) => {
           <div className="cate_header">
             <SectionHeader
               title="Categories"
-              linkText="View All"
-              linkTo="/"
-              Icon={FaArrowRight}
             />
           </div>
           <CategoriesCard categories={data}/>

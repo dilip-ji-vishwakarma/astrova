@@ -61,7 +61,7 @@ function App() {
         <Route path="/puja" element={<PujaMain />} />
         <Route path="/puja-booking" element={<PujaBookDetails />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/blog-detail" element={<BlogDetails />} />
+        <Route path="/blog-detail/:id" element={<BlogDetails />} />
         <Route
           path={"/my-profile"}
           element={
