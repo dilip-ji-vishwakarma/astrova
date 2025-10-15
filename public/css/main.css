@@ -912,13 +912,6 @@ body {
     margin: 0 20px;*/
 }
 
-.News_card_image {
-    border: 1px dashed #cecece;
-    margin-right: 10px;
-    text-align: center;
-    padding: 10px;
-    background: var(--bgwhite);
-}
 
 .News_card_image img {
     width: 100%;

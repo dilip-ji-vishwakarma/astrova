@@ -36,7 +36,9 @@ const BlogDetails = () => {
     if (id) fetchBlogDetails();
   }, [id]);
 
-  if (loading) return <div className="loader set-height">
+  if (loading)
+    return (
+      <div className="loader set-height">
         <div className="box box-1">
           <div className="side-left"></div>
           <div className="side-right"></div>
@@ -57,7 +59,8 @@ const BlogDetails = () => {
           <div className="side-right"></div>
           <div className="side-top"></div>
         </div>
-      </div>;
+      </div>
+    );
   if (error) return <p className="text-center text-danger mt-5">{error}</p>;
   if (!data) return null;
 

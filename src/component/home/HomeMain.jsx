@@ -65,7 +65,7 @@ const HomeMain = () => {
 
   return (
     <>
-      <Hero data={data?.hero} />
+      <Hero  />
       <div className="hidden">
         <SliderSection data={data?.slider} />
       </div>

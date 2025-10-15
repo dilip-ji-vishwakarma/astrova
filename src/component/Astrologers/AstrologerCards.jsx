@@ -69,10 +69,8 @@ export const AstrologerCards = ({ astrologers }) => {
                       Exp: {astro.experienceYrs} | Lang:{" "}
                       {astro.languages?.join(", ")}
                     </p>
-                    <p className="astro_rate">₹{astro.rate}/min</p>
-                    {astro.freeCall && (
-                      <p className="astro_free_Call">Free Call</p>
-                    )}
+                    <p className="astro_rate">Voice call ₹{astro.voiceCallRate}/min</p>
+                   <p className="astro_rate">Video call ₹{astro.videoCallRate}/min</p>
                     <div>
                       {astro.isCallAvailable && (
                         <CommonButton

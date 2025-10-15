@@ -19,13 +19,13 @@ const Hero = () => {
               <p>Unlock the Secrets of the Stars and Planets</p>
               <div className="hero_section_btns">
                 <LinkCommon
-                  to="/chat-with-astrologer"
+                  to="/all-astrologer?isChatAvailable=true"
                   text="Chat with Astrologer"
                   icon={MdOutlineMessage}
                   className="rounded-5 btn btn-white py-3 me-3"
                 />
                 <LinkCommon
-                  to="/talk-with-astrologer"
+                  to="/all-astrologer?isCallAvailable=true"
                   text="Call with Astrologer"
                   icon={IoCallOutline}
                   className="rounded-5 btn btn-blue py-3 me-3"

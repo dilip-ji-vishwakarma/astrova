@@ -69,16 +69,12 @@ const Footer = () => {
               <div className="footer_single_col">
                 <h3>Quick Links</h3>
                 <div className="footer_links">
-                  <Link to="/chat-with-astrologer">Chat with Astrologer</Link>
-                  <Link to="/talk-with-astrologer">Call with Astrologer</Link>
-                  <Link to="/astro-details">Astro Details</Link>
+                  <Link to="/all-astrologer">Astrologer</Link>
 
                   <Link to="/">Free Kundli</Link>
                   <Link to="/">Daily Panchang</Link>
                   <Link to="/">Kundli Matching</Link>
                   <Link to="/history">History</Link>
-                  <Link to="/live-astrologers">Live Astrologers</Link>
-
                   <Link to="/invited-list">Invited List</Link>
                   <Link to="/booking-appointment">Booking Appointment</Link>
                 </div>

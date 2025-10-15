@@ -1,7 +1,7 @@
-import React from "react";
-
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { getImageUrl } from "../../../utils/getImageUrl";
+import { Link } from "react-router-dom";
 
 const responsive = {
   desktop: {
@@ -43,16 +43,16 @@ const News = [
   },
 ];
 
-const NewsCard = () => {
+const NewsCard = ({News} = []) => {
   return (
     <>
       <div className="">
         <Carousel responsive={responsive} infinite autoPlay={true}>
           {News?.map((News) => (
             <div key={News?.id} className="News_card">
-              <div className="News_card_image">
-                <img src={News.image} alt={News.image} className="img-fluid" />
-              </div>
+              <a href={News.link} target="_blank" className="News_card_image">
+                <img src={getImageUrl(News.image)} alt={News.channel} className="img-fluid" />
+              </a>
             </div>
           ))}
         </Carousel>
