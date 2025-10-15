@@ -3243,3 +3243,7 @@ li.p-multiselect-item {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.hidden {
+    display: none;
+}
