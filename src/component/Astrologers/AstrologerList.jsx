@@ -2,52 +2,75 @@ import HeaderBreadcrumb from "../HeaderBreadcrumb";
 import { useFilterMutations } from "./hook/use-filter-mutations";
 import AstrologerCard from "./AstrologerCard";
 import { MetaPagination } from "../Pagination/Pagination";
-
+import { useSearchParams } from "react-router-dom";
 
 const AstrologerList = () => {
+  const [searchParams] = useSearchParams();
   const {
     SORT_OPTIONS,
     selectedSort,
     setSelectedSort,
     handleFilterChange,
+    handleLiveFilterChange,
     filterOptions,
     data,
     loading,
     filters,
     pagination,
     handlePageChange,
-  } = useFilterMutations();
+    liveFilter,
+  } = useFilterMutations(searchParams);
 
   return (
     <>
       <HeaderBreadcrumb />
 
+      {/* Live Status Tabs */}
+      <div className="astro_filter_cat_main offcat container d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+        <div className="d-flex flex-wrap gap-2">
+          <button
+            className={`filter_tab_btn ${liveFilter === "" ? "selected" : ""}`}
+            onClick={() => handleLiveFilterChange("")}
+          >
+            View All
+          </button>
+          <button
+            className={`filter_tab_btn ${liveFilter === "online" ? "selected" : ""}`}
+            onClick={() => handleLiveFilterChange("online")}
+          >
+            Online
+          </button>
+          <button
+            className={`filter_tab_btn ${liveFilter === "offline" ? "selected" : ""}`}
+            onClick={() => handleLiveFilterChange("offline")}
+          >
+            Offline
+          </button>
+        </div>
+
+        {/* Sort Dropdown */}
+        <div className="sort_dropdown_wrapper">
+          <select
+            className="form-select"
+            value={selectedSort}
+            onChange={(e) => setSelectedSort(e.target.value)}
+            style={{ width: "250px" }}
+          >
+            {Object.keys(SORT_OPTIONS).map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Sidebar Filters */}
       <div className="container my-4">
         <div className="row">
-          {/* Sidebar */}
           <aside className="col-md-3 mb-4">
-            <div className="card shadow-sm">
+            <div className="card shadow-sm sticky-sidebar">
               <div className="card-body">
-                <h5 className="card-title">Sort By</h5>
-                <div className="list-group mb-3">
-                  {Object.keys(SORT_OPTIONS).map((option) => (
-                    <label
-                      key={option}
-                      className="list-group-item list-group-item-action d-flex align-items-center"
-                    >
-                      <input
-                        type="radio"
-                        name="sort"
-                        value={option}
-                        checked={selectedSort === option}
-                        onChange={() => setSelectedSort(option)}
-                        className="form-check-input me-2"
-                      />
-                      {option}
-                    </label>
-                  ))}
-                </div>
-
                 <h5 className="card-title">Filters</h5>
 
                 {/* Languages */}
@@ -84,7 +107,7 @@ const AstrologerList = () => {
                   />
                 </div>
 
-                {/* Skills */}
+                {/* Primary Skills */}
                 <div className="mb-3">
                   <label className="form-label">Primary Skills</label>
                   <select
@@ -144,7 +167,7 @@ const AstrologerList = () => {
             </div>
           </aside>
 
-          {/* Main content */}
+          {/* Astrologers List */}
           <main className="col-md-9">
             {loading ? (
               <p>Loading astrologers...</p>
@@ -152,7 +175,7 @@ const AstrologerList = () => {
               <p>No astrologers found.</p>
             ) : (
               <>
-                <div className="row g-3">
+                <div className="d-flex flex-wrap" style={{ gap: "20px" }}>
                   {data.map((astrologer) => (
                     <AstrologerCard
                       key={astrologer.id}
@@ -162,7 +185,6 @@ const AstrologerList = () => {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 <div className="mt-4 d-flex justify-content-center">
                   <MetaPagination
                     pagination={pagination}

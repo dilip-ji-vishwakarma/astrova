@@ -1353,7 +1353,6 @@ textarea::placeholder {
 .astro_details_card_main {
     border: 2px solid#E25016;
     padding: 40px;
-    margin: 54px 0;
     border-radius: 10px;
     display: flex;
     /* align-items: center; */
@@ -1434,7 +1433,6 @@ textarea::placeholder {
 .astro_details_card_profile_content .astro_charge_rate p:last-child {
     font-size: 14px;
     font-weight: 400;
-    text-decoration: line-through;
     margin-left: 10px;
         color: #7979798a;
 }
@@ -3247,3 +3245,33 @@ li.p-multiselect-item {
 .hidden {
     display: none;
 }
+
+.astro_details_card_main {
+  background: #fff;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.astro_details_card_main:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.Astro_call_video_btn {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.Astro_chat_btn {
+  background: #f69a0e !important;
+  border: none;
+}
+
+/* CSS */
+.sticky-sidebar {
+  position: sticky;
+  top: 0px; /* top se distance */
+  align-self: start; /* flex parent ke liye */
+}
+
+

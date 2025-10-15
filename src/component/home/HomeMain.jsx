@@ -72,7 +72,7 @@ const HomeMain = () => {
       <div className="mt-5">
         <LiveAstrologersMain data={data?.liveAstrologers} />
       </div>
-      <AstrologersMain data={data?.astrologers} />
+      <AstrologersMain data={data?.chatAstrologers} />
       <CategoriesMain data={data?.categories} />
       <div className="hidden">
         <PoojaBookingMain data={data?.poojas} />

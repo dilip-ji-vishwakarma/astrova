@@ -11,7 +11,7 @@ const AstrologersMain = () => {
           <SectionHeader
             title="Astrologers"
             linkText="View All"
-            linkTo="/all-astrologer"
+            linkTo="/all-astrologer?isChatAvailable=true"
             Icon={FaArrowRight}
           />
           <AstrologerCard />

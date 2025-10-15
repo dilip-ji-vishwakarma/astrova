@@ -14,7 +14,7 @@ const SORT_OPTIONS = {
   "Rating : High to Low": "ratingHighToLow",
 };
 
-export const useFilterMutations = () => {
+export const useFilterMutations = (searchParams) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [selectedSort, setSelectedSort] = useState("Popularity");
@@ -24,6 +24,8 @@ export const useFilterMutations = () => {
     primarySkills: "",
     country: "",
     gender: "",
+    isCallAvailable: "",
+    isChatAvailable: "",
   });
   const [filterOptions, setFilterOptions] = useState({
     languagesList: [],
@@ -37,36 +39,70 @@ export const useFilterMutations = () => {
     limit: 10,
     totalPages: 1,
   });
+  const [filtersInitialized, setFiltersInitialized] = useState(false);
+  const [liveFilter, setLiveFilter] = useState(""); // "", "online", "offline"
 
-  // Memoized fetch function to avoid missing dependency warnings
-  const fetchAstrologers = useCallback(async (page = 1) => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      params.append("sortBy", SORT_OPTIONS[selectedSort]);
-      params.append("page", page);
-
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) params.append(key, value);
-      });
-
-      const response = await apiService(`${astrologer_list}?${params.toString()}`, "get");
-
-      if (response?.success) {
-        setData(response.data);
-        setPagination(response.pagination || { page: 1, total: 0, limit: 10, totalPages: 1 });
-      } else {
-        toast.error(response?.message || "Failed to load astrologers");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong!");
-    } finally {
-      setLoading(false);
+  // Initialize filters from URL
+  useEffect(() => {
+    if (!searchParams) {
+      setFiltersInitialized(true);
+      return;
     }
-  }, [selectedSort, filters]);
 
-  // Fetch filter options once on mount
+    const urlFilters = {};
+    for (const [key, value] of searchParams.entries()) {
+      if (value) urlFilters[key] = value;
+    }
+
+    if (Object.keys(urlFilters).length > 0) {
+      setFilters((prev) => ({ ...prev, ...urlFilters }));
+    }
+
+    setFiltersInitialized(true);
+  }, [searchParams]);
+
+  // Fetch astrologers
+  const fetchAstrologers = useCallback(
+    async (page = 1) => {
+      if (!filtersInitialized) return;
+      try {
+        setLoading(true);
+        const params = new URLSearchParams();
+        params.append("sortBy", SORT_OPTIONS[selectedSort]);
+        params.append("page", page);
+
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) params.append(key, value);
+        });
+
+        // ✅ Send liveFilter to API
+        if (liveFilter === "online") params.append("isLive", true);
+        else if (liveFilter === "offline") params.append("isLive", false);
+
+        const response = await apiService(
+          `${astrologer_list}?${params.toString()}`,
+          "get"
+        );
+
+        if (response?.success) {
+          setData(response.data);
+          setPagination(
+            response.pagination || { page: 1, total: 0, limit: 10, totalPages: 1 }
+          );
+        } else {
+          toast.error(response?.message || "Failed to load astrologers");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Something went wrong!");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [selectedSort, filters, filtersInitialized, liveFilter]
+  );
+
+  // Fetch filter options once
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
@@ -82,17 +118,23 @@ export const useFilterMutations = () => {
     fetchFilterOptions();
   }, []);
 
-  // Fetch astrologers whenever sort or filters change
+  // Auto-fetch after filters initialized
   useEffect(() => {
-    fetchAstrologers(1); // reset to first page
-  }, [fetchAstrologers]);
+    if (filtersInitialized) {
+      fetchAstrologers(1);
+    }
+  }, [fetchAstrologers, filtersInitialized]);
 
-  // Update a filter value
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    fetchAstrologers(1); // fetch updated data
   };
 
-  // Change page
+  const handleLiveFilterChange = (status) => {
+    setLiveFilter(status);
+    fetchAstrologers(1); // fetch updated data
+  };
+
   const handlePageChange = (page) => {
     fetchAstrologers(page);
   };
@@ -102,11 +144,13 @@ export const useFilterMutations = () => {
     selectedSort,
     setSelectedSort,
     handleFilterChange,
+    handleLiveFilterChange,
     filterOptions,
     data,
     loading,
     filters,
     pagination,
     handlePageChange,
+    liveFilter,
   };
 };
