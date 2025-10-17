@@ -11,7 +11,6 @@ import AstroDetails from "./component/AstroDetails/AstroDetails";
 import SendGift from "./component/AstroDetails/SendGift";
 
 import AstrologerListPage from "./component/AstrologerList/AstrologerListPage";
-import LiveTabsComponent from "./component/LiveAstrologers/LiveTabsComponent";
 import HistroryMain from "./component/History/HistroryMain";
 import ReferralsMain from "./component/Referrals/ReferralsMain";
 import BookingAppointment from "./component/BookingAppointment/BookingAppointment";
@@ -26,6 +25,7 @@ import AstrologerList from "./component/Astrologers/AstrologerList";
 import { MyProfile } from "./component/Profile/my-profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AstrologerProfile } from "./component/home/LiveAstrologers/AstrologerProfile";
+import { ChatBookingForm } from "./component/ChatBookingForm/ChatBookingForm";
 
 function App() {
   const navigate = useNavigate();
@@ -62,6 +62,7 @@ function App() {
         <Route path="/puja-booking" element={<PujaBookDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/blog-detail/:id" element={<BlogDetails />} />
+        <Route path="/chat/:astrologerId" element={<ChatBookingForm />} />
         <Route
           path={"/my-profile"}
           element={

@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getImageUrl } from "../../../utils/getImageUrl";
 import CommonButton from "../../commonComp/CommonButton";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useFollowMutations } from "./hook/use-follow-mutations";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { MdOutlineAddIcCall } from "react-icons/md";
 
 export const AstrologerProfile = () => {
   const { id } = useParams();
 
   const { handleFollow, loadding, loading, data, isLoggedIn , handleUnFollow} = useFollowMutations({id});
-
 
   if (loading) {
     return (
@@ -75,6 +76,10 @@ export const AstrologerProfile = () => {
                   <span className="text-danger fw-semibold">Offline</span>
                 </div>
               )}
+            </div>
+            <div className="icon-setting">
+              {data.isChatAvailable && (<a href={`/chat/${data.id}`} className="icon-design"><IoChatbubbleEllipsesOutline /></a>)}
+              {data.isCallAvailable && (<div className="icon-design"><MdOutlineAddIcCall /></div>)}
             </div>
             <div className="mt-5">
               {isLoggedIn && (
