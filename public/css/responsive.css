@@ -913,10 +913,6 @@
         min-width: 100%;
     }
 
-    .booking_form_btn button:first-child {
-        margin-right: 0px;
-        margin-top: 20px;
-    }
 
     .input_box input,
     .input_box select {

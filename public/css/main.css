@@ -2558,9 +2558,6 @@ textarea::placeholder {
     padding: 15px 0 !important;
 }
 
-.booking_form_btn button:first-child {
-    margin-right: 20px;
-}
 .cancel_btn {
     background-color: var(--primaryColor);
     color: var(--textwhite);
