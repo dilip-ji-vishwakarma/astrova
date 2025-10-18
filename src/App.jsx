@@ -25,7 +25,7 @@ import AstrologerList from "./component/Astrologers/AstrologerList";
 import { MyProfile } from "./component/Profile/my-profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AstrologerProfile } from "./component/home/LiveAstrologers/AstrologerProfile";
-import { ChatBookingForm } from "./component/ChatBookingForm/ChatBookingForm";
+import { BookingPage } from "./component/ChatBookingForm/BookingPage";
 
 function App() {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ function App() {
         <Route path="/puja-booking" element={<PujaBookDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/blog-detail/:id" element={<BlogDetails />} />
-        <Route path="/chat/:astrologerId" element={<ChatBookingForm />} />
+        <Route path="/chat/:astrologerId" element={<BookingPage />} />
         <Route
           path={"/my-profile"}
           element={

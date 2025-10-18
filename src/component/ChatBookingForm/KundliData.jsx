@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { apiServiceWithSession } from "../../services/apiServiceWithSession";
 import { formatSingleDate } from "../../utils/formate-date";
 
-export const KundliData = () => {
+export const KundliData = ({ onSelectKundli }) => {
   const [loading, setLoading] = useState(false);
   const [kundliData, setKundliData] = useState([]);
 
@@ -38,12 +38,16 @@ export const KundliData = () => {
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner"></div>
-          <p>Loading kundli data...</p>
         </div>
       ) : kundliData.length > 0 ? (
         <div className="kundli-card-grid">
           {kundliData.map((item) => (
-            <div key={item.id} className="kundli-card">
+            <div
+              key={item.id}
+              className="kundli-card"
+              style={{ cursor: "pointer" }}
+              onClick={() => onSelectKundli(item)}
+            >
               <h4 className="kundli-name">{item.name}</h4>
 
               <div className="kundli-row">
@@ -74,8 +78,7 @@ export const KundliData = () => {
               </div>
 
               <p className="created-at">
-                Created on:{" "}
-                {formatSingleDate(item.createdAt, true)}
+                Created on: {formatSingleDate(item.createdAt, true)}
               </p>
             </div>
           ))}

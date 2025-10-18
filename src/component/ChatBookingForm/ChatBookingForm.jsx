@@ -1,22 +1,30 @@
-import { useEffect } from "react";
-import HeaderBreadcrumb from "../HeaderBreadcrumb";
-import { FaUser } from "react-icons/fa";
-import { useDataMutations } from "./hook/use-data-mutations";
-import { Controller } from "react-hook-form";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Controller } from "react-hook-form";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
-import { KundliData } from "./KundliData";
+import { useDataMutations } from "./hook/use-data-mutations";
+import { FaUser } from "react-icons/fa";
 
-export const ChatBookingForm = () => {
+export const ChatBookingForm = ({ selectedKundli }) => {
   const { astrologerId } = useParams();
   const { onSubmit, control, handleSubmit, isSubmitting, setValue, errors } =
     useDataMutations();
+  const formatForInputDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
   useEffect(() => {
     if (astrologerId) setValue("astrologerId", Number(astrologerId));
+
     const tzOffset = -new Date().getTimezoneOffset() / 60;
     setValue("tzOffset", tzOffset);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -35,14 +43,28 @@ export const ChatBookingForm = () => {
     }
   }, [astrologerId, setValue]);
 
+  // Populate form when a Kundli card is clicked
+  useEffect(() => {
+    if (selectedKundli) {
+      Object.keys(selectedKundli).forEach((key) => {
+        let value = selectedKundli[key];
+
+        if (key === "dob") {
+          value = formatForInputDate(value);
+        }
+
+        setValue(key, value);
+      });
+    }
+  }, [selectedKundli, setValue]);
+
   return (
     <>
-      <HeaderBreadcrumb />
-      <KundliData />
-      <div className="container">
+      <div className="container my-4">
         <div className="booking_appo_form_main">
           <form onSubmit={handleSubmit(onSubmit)} className="row">
 
+            {/* Hidden Fields */}
             {["astrologerId", "tzOffset", "lat", "long"].map((field) => (
               <Controller
                 key={field}
@@ -94,7 +116,7 @@ export const ChatBookingForm = () => {
               />
             </div>
 
-            {/* Birth Date */}
+            {/* DOB */}
             <div className="col-lg-6 mb-4">
               <Controller
                 name="dob"
@@ -113,7 +135,7 @@ export const ChatBookingForm = () => {
               />
             </div>
 
-            {/* Birth Time */}
+            {/* TOB */}
             <div className="col-lg-6 mb-4">
               <Controller
                 name="tob"
@@ -132,7 +154,7 @@ export const ChatBookingForm = () => {
               />
             </div>
 
-            {/* Birth Place */}
+            {/* POB */}
             <div className="col-lg-6 mb-4">
               <Controller
                 name="pob"
@@ -170,12 +192,13 @@ export const ChatBookingForm = () => {
               />
             </div>
 
+            {/* Submit */}
             <div className="col-12 text-center mt-3">
               <button
                 type="submit"
                 className="ms-2 login_btn rounded-5 log-out"
                 disabled={isSubmitting}
-                style={{width: "50%"}}
+                style={{ width: "50%" }}
               >
                 {isSubmitting ? "Submitting..." : "Submit"}
               </button>
