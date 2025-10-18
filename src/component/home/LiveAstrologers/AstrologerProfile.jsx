@@ -78,8 +78,21 @@ export const AstrologerProfile = () => {
               )}
             </div>
             <div className="icon-setting">
-              {data.isChatAvailable && (<a href={`/chat/${data.id}`} className="icon-design"><IoChatbubbleEllipsesOutline /></a>)}
-              {data.isCallAvailable && (<div className="icon-design"><MdOutlineAddIcCall /></div>)}
+              {isLoggedIn && (
+  <>
+    {data.isChatAvailable && (
+      <a href={`/chat/${data.id}`} className="icon-design">
+        <IoChatbubbleEllipsesOutline />
+      </a>
+    )}
+    {data.isCallAvailable && (
+      <div className="icon-design">
+        <MdOutlineAddIcCall />
+      </div>
+    )}
+  </>
+)}
+
             </div>
             <div className="mt-5">
               {isLoggedIn && (

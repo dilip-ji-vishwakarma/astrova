@@ -8,19 +8,20 @@ export const useDataMutations = () => {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
+    reset
   } = useForm();
 
   const onSubmit = async (data) => {
     try {
       const saveResponse = await apiServiceWithSession(
         "/user/queue",
-        "POST",
+        "post",
         data
       );
 
       if (saveResponse.success) {
         toast.success(saveResponse.message);
-        window.location.reload();
+        reset()
       } else {
         toast.error(saveResponse.message);
       }
