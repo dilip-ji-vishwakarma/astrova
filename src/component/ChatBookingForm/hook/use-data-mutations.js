@@ -2,13 +2,12 @@ import { useForm } from "react-hook-form";
 import { apiServiceWithSession } from "../../../services/apiServiceWithSession";
 import { toast } from "sonner";
 
-export const useDataMutations = () => {
+export const useDataMutations = ({setShowModal, setSubmittedData}) => {
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-    reset
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -21,7 +20,8 @@ export const useDataMutations = () => {
 
       if (saveResponse.success) {
         toast.success(saveResponse.message);
-        reset()
+        setSubmittedData(saveResponse.data);
+        setShowModal(true)
       } else {
         toast.error(saveResponse.message);
       }

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getImageUrl } from "../../../utils/getImageUrl";
 import CommonButton from "../../commonComp/CommonButton";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -8,6 +8,8 @@ import { MdOutlineAddIcCall } from "react-icons/md";
 
 export const AstrologerProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
 
   const { handleFollow, loadding, loading, data, isLoggedIn , handleUnFollow} = useFollowMutations({id});
 
@@ -81,10 +83,17 @@ export const AstrologerProfile = () => {
               {isLoggedIn && (
   <>
     {data.isChatAvailable && (
-      <a href={`/chat/${data.id}`} className="icon-design">
-        <IoChatbubbleEllipsesOutline />
-      </a>
-    )}
+  <div
+    className="icon-design"
+    onClick={() => 
+      navigate(`/chat/${data.id}`, { state: { name: data.firstName } })
+    }
+    style={{ cursor: "pointer" }}
+  >
+    <IoChatbubbleEllipsesOutline />
+  </div>
+)}
+
     {data.isCallAvailable && (
       <div className="icon-design">
         <MdOutlineAddIcCall />

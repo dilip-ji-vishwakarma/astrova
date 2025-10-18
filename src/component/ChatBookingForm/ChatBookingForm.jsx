@@ -1,15 +1,32 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Controller } from "react-hook-form";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
 import { useDataMutations } from "./hook/use-data-mutations";
 import { FaUser } from "react-icons/fa";
+import { useSocket } from "./hook/useSocket";
+
 
 export const ChatBookingForm = ({ selectedKundli }) => {
   const { astrologerId } = useParams();
+  const location = useLocation();
+  const { name } = location.state || {};
+  const [showModal, setShowModal] = useState(false);
+  const [submittedData, setSubmittedData] = useState(null);
+  const [timer, setTimer] = useState(120); // 2 minutes in seconds
   const { onSubmit, control, handleSubmit, isSubmitting, setValue, errors } =
-    useDataMutations();
+    useDataMutations({ setShowModal, setSubmittedData });
+ const userInfo = localStorage.getItem("userInfo");
+ const navigate = useNavigate();
+      const { logs } = useSocket({
+    queueId: submittedData?.queue?.id,
+    userId: userInfo,
+    autoConnect: showModal,
+  });
+
+ 
+
   const formatForInputDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -21,7 +38,6 @@ export const ChatBookingForm = ({ selectedKundli }) => {
 
   useEffect(() => {
     if (astrologerId) setValue("astrologerId", Number(astrologerId));
-
     const tzOffset = -new Date().getTimezoneOffset() / 60;
     setValue("tzOffset", tzOffset);
 
@@ -43,27 +59,40 @@ export const ChatBookingForm = ({ selectedKundli }) => {
     }
   }, [astrologerId, setValue]);
 
-  // Populate form when a Kundli card is clicked
   useEffect(() => {
     if (selectedKundli) {
       Object.keys(selectedKundli).forEach((key) => {
         let value = selectedKundli[key];
-
-        if (key === "dob") {
-          value = formatForInputDate(value);
-        }
-
+        if (key === "dob") value = formatForInputDate(value);
         setValue(key, value);
       });
     }
   }, [selectedKundli, setValue]);
+
+  // Timer logic
+  useEffect(() => {
+    let interval;
+    if (showModal && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      navigate(`/astrologer/${astrologerId}`);
+    }
+    return () => clearInterval(interval);
+  },);
+
+  const formatTimer = (seconds) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
   return (
     <>
       <div className="container my-4">
         <div className="booking_appo_form_main">
           <form onSubmit={handleSubmit(onSubmit)} className="row">
-
             {/* Hidden Fields */}
             {["astrologerId", "tzOffset", "lat", "long"].map((field) => (
               <Controller
@@ -206,6 +235,33 @@ export const ChatBookingForm = ({ selectedKundli }) => {
           </form>
         </div>
       </div>
+
+      {showModal && (
+        <div className="login_popup_overlay">
+          <div className="login_popup_box animate__animated animate__fadeInDown">
+            <div className="popup_header text-center">
+              <h5>You're all set</h5>
+            </div>
+            <div className="popup_body p-2 text-center">
+              <input
+                type="hidden"
+                id="queueId"
+                value={submittedData.queue.id}
+                disabled
+              />
+              <input type="hidden" id="userId" value={userInfo} disabled />
+              <p>
+                You will connect with {name} after the astrologer accepts your
+                request
+              </p>
+              <h6>Closing in: {formatTimer(timer)}</h6>
+              <pre style={{ textAlign: "left", maxHeight: "200px", overflowY: "auto" }}>
+                {logs.join("\n")}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
