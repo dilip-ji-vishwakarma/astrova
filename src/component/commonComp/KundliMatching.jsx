@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { Controller } from "react-hook-form";
 import InputField from "../ChatBookingForm/InputField";
 import SelectField from "../ChatBookingForm/SelectField";
-import { useDataMutations } from "./hook/use-data-mutations";
+import { useKundliMatching } from "./hook/use-kundli-matching";
 
-const KundaliForm = () => {
+export const KundliMatching = () => {
   const { onSubmit, control, handleSubmit, isSubmitting, setValue, errors } =
-    useDataMutations();
+    useKundliMatching();
 
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
@@ -15,19 +15,18 @@ const KundaliForm = () => {
     if (userInfo) {
       try {
         const parsed = JSON.parse(userInfo);
-        userId = typeof parsed === "object" && parsed.id ? Number(parsed.id) : Number(parsed);
+        userId =
+          typeof parsed === "object" && parsed.id
+            ? Number(parsed.id)
+            : Number(parsed);
       } catch {
         userId = Number(userInfo);
       }
     }
 
     setValue("userId", userId);
-
-    // tzOffset in integer minutes
-    const tzOffset = -new Date().getTimezoneOffset(); 
+    const tzOffset = -new Date().getTimezoneOffset();
     setValue("tzOffset", tzOffset);
-
-    // Geolocation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -45,12 +44,9 @@ const KundaliForm = () => {
       setValue("long", 0);
     }
   }, [setValue]);
-
   return (
     <div className="container my-4">
       <form onSubmit={handleSubmit(onSubmit)} className="row">
-
-        {/* Hidden Fields */}
         {["userId", "tzOffset", "lat", "long"].map((field) => (
           <Controller
             key={field}
@@ -63,7 +59,6 @@ const KundaliForm = () => {
           />
         ))}
 
-        {/* Name */}
         <div className="col-lg-6 mb-4">
           <Controller
             name="name"
@@ -83,7 +78,6 @@ const KundaliForm = () => {
           />
         </div>
 
-        {/* Gender */}
         <div className="col-lg-6 mb-4">
           <Controller
             name="gender"
@@ -102,7 +96,6 @@ const KundaliForm = () => {
           />
         </div>
 
-        {/* DOB */}
         <div className="col-lg-6 mb-4">
           <Controller
             name="dob"
@@ -120,8 +113,6 @@ const KundaliForm = () => {
             )}
           />
         </div>
-
-        {/* TOB */}
         <div className="col-lg-6 mb-4">
           <Controller
             name="tob"
@@ -139,8 +130,6 @@ const KundaliForm = () => {
             )}
           />
         </div>
-
-        {/* POB */}
         <div className="col-lg-6 mb-4">
           <Controller
             name="pob"
@@ -158,8 +147,6 @@ const KundaliForm = () => {
             )}
           />
         </div>
-
-        {/* Request Type */}
         <div className="col-lg-6 mb-4">
           <Controller
             name="requestType"
@@ -177,8 +164,6 @@ const KundaliForm = () => {
             )}
           />
         </div>
-
-        {/* Submit */}
         <div className="col-12 text-center mt-3">
           <button
             type="submit"
@@ -193,5 +178,3 @@ const KundaliForm = () => {
     </div>
   );
 };
-
-export default KundaliForm;

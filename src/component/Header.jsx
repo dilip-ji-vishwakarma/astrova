@@ -185,14 +185,16 @@ const Header = () => {
                 </li>
 
                 <li className="nav-item">
-                  <NavLink
-                    to="/kundli-matching"
-                    className={({ isActive }) =>
-                      isActive ? "nav-link active" : "nav-link"
-                    }
-                  >
-                    Kundli Matching
-                  </NavLink>
+                  {isLoggedIn && (
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive ? "nav-link active" : "nav-link"
+                      }
+                      to="/kundli-matching"
+                    >
+                       Kundli Matching
+                    </NavLink>
+                  )}
                 </li>
               </ul>
             </div>

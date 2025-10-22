@@ -1,8 +1,8 @@
 import  { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useLoginWithOtp } from "./hook/use-login-with-otp";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { useLoginWithOtp } from "./hook/use-login-with-otp";
 
 const LoginPopup = ({ onClose }) => {
   const [step, setStep] = useState("mobile");

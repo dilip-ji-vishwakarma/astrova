@@ -57,7 +57,14 @@ function App() {
         <Route path="/invited-list" element={<ReferralsMain />} />
         <Route path="/booking-appointment" element={<BookingAppointment />} />
         <Route path="/free-kundali" element={<KumdaliFormMain />} />
-        <Route path="/kundli-matching" element={<KundaliMatchingMain />} />
+        <Route
+          path={"/kundli-matching"}
+          element={
+            <ProtectedRoute>
+              <KundaliMatchingMain/>
+            </ProtectedRoute>
+          }
+        />
         <Route path="/puja" element={<PujaMain />} />
         <Route path="/puja-booking" element={<PujaBookDetails />} />
         <Route path="/checkout" element={<Checkout />} />
