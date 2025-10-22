@@ -15,6 +15,7 @@ import FeedbackMain from "./Feedback/FeedbackMain";
 import PoojaBookingMain from "./PoojaBooking/PoojaBookingMain";
 import WhatAstrova from "./WhatAstrova/WhatAstrova";
 import WhyAstrova from "./WhyAstrova/WhyAstrova";
+import { CallAstrologer } from "../Astrologers/CallAstrologer";
 
 const HomeMain = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ const HomeMain = () => {
         <LiveAstrologersMain data={data?.liveAstrologers} />
       </div>
       <AstrologersMain data={data?.chatAstrologers} />
+      <CallAstrologer data={data?.callAstrologers} />
       <CategoriesMain data={data?.categories} />
       <div className="hidden">
         <PoojaBookingMain data={data?.poojas} />

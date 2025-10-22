@@ -37,12 +37,25 @@ export const MetaPagination = ({ pagination, onPageChange }) => {
     return pages;
   };
 
+  const themeColor = "#E25016";
+
   return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination justify-content-center mt-4">
+    <nav aria-label="Pagination" className="mt-4">
+      <ul className="pagination justify-content-center align-items-center gap-2">
         {/* Previous */}
         <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-          <button className="page-link px-3" onClick={handlePrev}>
+          <button
+            className="page-link border-0 px-3 py-2 rounded-pill shadow-sm fw-semibold"
+            onClick={handlePrev}
+            style={{
+              backgroundColor: "white",
+              color: themeColor,
+              border: `1px solid ${themeColor}`,
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#FFF0EA")}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
+          >
             &#8592; Prev
           </button>
         </li>
@@ -51,25 +64,33 @@ export const MetaPagination = ({ pagination, onPageChange }) => {
         {getPageNumbers().map((p, index) =>
           p === "..." ? (
             <li key={index} className="page-item disabled">
-              <span className="page-link">...</span>
+              <span className="page-link border-0 bg-transparent text-secondary fw-bold">
+                ...
+              </span>
             </li>
           ) : (
-            <li
-              key={index}
-              className={`page-item ${page === p ? "active" : ""}`}
-              style={{ borderRadius: "50%", margin: "0 4px" }}
-            >
+            <li key={index} className="page-item">
               <button
-                className={`page-link text-center`}
+                className="page-link border-0 rounded-pill fw-semibold"
                 style={{
-                  width: "40px",
-                  height: "40px",
-                  padding: 0,
-                  borderRadius: "50%",
-                  backgroundColor: page === p ? "#0d6efd" : "white",
-                  color: page === p ? "white" : "#0d6efd",
-                  border: "1px solid #0d6efd",
-                  fontWeight: "bold",
+                  minWidth: "42px",
+                  height: "42px",
+                  backgroundColor: page === p ? themeColor : "#f8f9fa",
+                  color: page === p ? "white" : themeColor,
+                  border: `1px solid ${themeColor}`,
+                  boxShadow:
+                    page === p
+                      ? `0 0 10px rgba(226,80,22,0.4)`
+                      : "0 0 5px rgba(0,0,0,0.1)",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (page !== p)
+                    e.currentTarget.style.backgroundColor = "#FFF0EA";
+                }}
+                onMouseLeave={(e) => {
+                  if (page !== p)
+                    e.currentTarget.style.backgroundColor = "#f8f9fa";
                 }}
                 onClick={(e) => handlePageClick(e, p)}
               >
@@ -81,7 +102,18 @@ export const MetaPagination = ({ pagination, onPageChange }) => {
 
         {/* Next */}
         <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
-          <button className="page-link px-3" onClick={handleNext}>
+          <button
+            className="page-link border-0 px-3 py-2 rounded-pill shadow-sm fw-semibold"
+            onClick={handleNext}
+            style={{
+              backgroundColor: "white",
+              color: themeColor,
+              border: `1px solid ${themeColor}`,
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#FFF0EA")}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
+          >
             Next &#8594;
           </button>
         </li>

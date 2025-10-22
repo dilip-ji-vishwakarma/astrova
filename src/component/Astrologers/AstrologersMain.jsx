@@ -16,7 +16,7 @@ const AstrologersMain = ({data}) => {
       <div className="astro_main_Section section_space">
         <div className="container ">
           <SectionHeader
-            title="Astrologers"
+            title="Chat Astrologers"
             linkText="View All"
             linkTo="/all-astrologer?isChatAvailable=true"
             Icon={FaArrowRight}

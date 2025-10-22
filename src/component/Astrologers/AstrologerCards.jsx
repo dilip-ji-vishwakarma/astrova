@@ -1,12 +1,13 @@
 import React from "react";
 import { FaStar, FaComments } from "react-icons/fa";
-import { MdMessage, MdVerified } from "react-icons/md";
+import { MdMessage, MdOutlineAddIcCall, MdVerified } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CommonButton from "../commonComp/CommonButton";
 import { getImageUrl } from "../../utils/getImageUrl";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 
 const responsive = {
   desktop: {
@@ -27,11 +28,7 @@ const responsive = {
 export const AstrologerCards = ({ astrologers }) => {
   return (
     <div className="container">
-      <Carousel
-        responsive={responsive}
-        infinite
-        // autoPlay={true}
-      >
+      <Carousel responsive={responsive} infinite autoPlay={true}>
         {astrologers.map((astro) => (
           <div className="" key={astro.id}>
             <div className="astro_card ">
@@ -64,30 +61,22 @@ export const AstrologerCards = ({ astrologers }) => {
                         ) : null}
                       </h6>
                     </div>
-                    <p className="astro_expertise">{astro.expertise}</p>
-                    <p className=" astro_exp">
-                      Exp: {astro.experienceYrs} | Lang:{" "}
-                      {astro.languages?.join(", ")}
+                    <p className="mb-1 small text-secondary">
+                      <strong>Exp:</strong> {astro.experienceYrs} yrs |{" "}
+                      <strong>Lang:</strong> {astro.languages?.join(", ")}
                     </p>
-                    <p className="astro_rate">Voice call ₹{astro.voiceCallRate}/min</p>
-                   <p className="astro_rate">Video call ₹{astro.videoCallRate}/min</p>
-                    <div>
-                      {astro.isCallAvailable && (
-                        <CommonButton
-                          text="Call"
-                          className="Call_btn"
-                          iconLeft={MdMessage} // replace with call icon if you have one
-                          // onClick={() => handleCall(astro)}
-                        />
-                      )}
-
+                    <div className="mt-2">
+                      <div className="d-flex justify-content-between small fw-semibold">
+                        <span>🎙 Voice ₹{astro.voiceCallRate}/min</span>
+                        <span>🎥 Video ₹{astro.videoCallRate}/min</span>
+                      </div>
+                    </div>
+                    <div className="btn-setting">
                       {astro.isChatAvailable && (
-                        <CommonButton
-                          text="Chat"
-                          className="Chat_btn"
-                          iconLeft={MdMessage}
-                          // onClick={() => handleChat(astro)}
-                        />
+<button className="round_Shap_btn"><IoChatbubbleEllipsesOutline /> chat</button>
+                      )}
+                       {astro.isCallAvailable && (
+<button className="round_Shap_btn"><MdOutlineAddIcCall /> Call</button>
                       )}
                     </div>
                   </div>
