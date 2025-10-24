@@ -24,33 +24,40 @@ export const KundliMatching = () => {
       }
     }
 
-    setValue("userId", userId);
     const tzOffset = -new Date().getTimezoneOffset();
-    setValue("tzOffset", tzOffset);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setValue("lat", pos.coords.latitude);
-          setValue("long", pos.coords.longitude);
-        },
-        () => {
-          alert("Please allow location access to continue.");
-          setValue("lat", 0);
-          setValue("long", 0);
-        }
-      );
-    } else {
-      setValue("lat", 0);
-      setValue("long", 0);
-    }
+
+    // Pre-fill hidden values for both male & female
+    ["male", "female"].forEach((person) => {
+      setValue(`${person}.userId`, userId);
+      setValue(`${person}.tzOffset`, tzOffset);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setValue(`${person}.lat`, pos.coords.latitude);
+            setValue(`${person}.long`, pos.coords.longitude);
+          },
+          () => {
+            alert("Please allow location access to continue.");
+            setValue(`${person}.lat`, 0);
+            setValue(`${person}.long`, 0);
+          }
+        );
+      } else {
+        setValue(`${person}.lat`, 0);
+        setValue(`${person}.long`, 0);
+      }
+    });
   }, [setValue]);
-  return (
-    <div className="container my-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="row">
+
+  // Helper component to avoid repetition
+  const PersonForm = ({ title, prefix }) => (
+    <div className="my-4">
+      <h3 className="mb-3">{title}</h3>
+      <div className="row">
         {["userId", "tzOffset", "lat", "long"].map((field) => (
           <Controller
-            key={field}
-            name={field}
+            key={`${prefix}.${field}`}
+            name={`${prefix}.${field}`}
             control={control}
             defaultValue={0}
             render={({ field }) => (
@@ -61,18 +68,17 @@ export const KundliMatching = () => {
 
         <div className="col-lg-6 mb-4">
           <Controller
-            name="name"
+            name={`${prefix}.name`}
             control={control}
             defaultValue=""
             rules={{ required: "Name is required" }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <InputField
                 label="Name"
-                placeholder="Enter your name"
+                placeholder="Enter name"
                 icon={<FaUser />}
-                value={value}
-                onChange={onChange}
-                error={errors.name?.message}
+                {...field}
+                error={errors?.[prefix]?.name?.message}
               />
             )}
           />
@@ -80,17 +86,16 @@ export const KundliMatching = () => {
 
         <div className="col-lg-6 mb-4">
           <Controller
-            name="gender"
+            name={`${prefix}.gender`}
             control={control}
             defaultValue=""
             rules={{ required: "Gender is required" }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <SelectField
                 label="Gender"
-                value={value}
-                onChange={onChange}
                 options={["male", "female", "other"]}
-                error={errors.gender?.message}
+                {...field}
+                error={errors?.[prefix]?.gender?.message}
               />
             )}
           />
@@ -98,72 +103,64 @@ export const KundliMatching = () => {
 
         <div className="col-lg-6 mb-4">
           <Controller
-            name="dob"
+            name={`${prefix}.dob`}
             control={control}
             defaultValue=""
             rules={{ required: "Birth Date is required" }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <InputField
                 label="Birth Date"
                 type="date"
-                value={value}
-                onChange={onChange}
-                error={errors.dob?.message}
+                {...field}
+                error={errors?.[prefix]?.dob?.message}
               />
             )}
           />
         </div>
+
         <div className="col-lg-6 mb-4">
           <Controller
-            name="tob"
+            name={`${prefix}.tob`}
             control={control}
             defaultValue=""
             rules={{ required: "Birth Time is required" }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <InputField
                 label="Birth Time"
                 type="time"
-                value={value}
-                onChange={onChange}
-                error={errors.tob?.message}
+                {...field}
+                error={errors?.[prefix]?.tob?.message}
               />
             )}
           />
         </div>
+
         <div className="col-lg-6 mb-4">
           <Controller
-            name="pob"
+            name={`${prefix}.pob`}
             control={control}
             defaultValue=""
             rules={{ required: "Birth Place is required" }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field }) => (
               <InputField
                 label="Birth Place"
                 placeholder="Udaipur, Rajasthan"
-                value={value}
-                onChange={onChange}
-                error={errors.pob?.message}
+                {...field}
+                error={errors?.[prefix]?.pob?.message}
               />
             )}
           />
         </div>
-        <div className="col-lg-6 mb-4">
-          <Controller
-            name="requestType"
-            control={control}
-            defaultValue=""
-            rules={{ required: "Request Type is required" }}
-            render={({ field: { onChange, value } }) => (
-              <SelectField
-                label="Request Type"
-                value={value}
-                onChange={onChange}
-                options={["chat", "voice", "video"]}
-                error={errors.requestType?.message}
-              />
-            )}
-          />
-        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="container my-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="row">
+        <PersonForm title="Boy's Details" prefix="male" />
+        <PersonForm title="Girl's Details" prefix="female" />
+
         <div className="col-12 text-center mt-3">
           <button
             type="submit"

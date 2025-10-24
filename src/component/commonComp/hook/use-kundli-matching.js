@@ -4,42 +4,45 @@ import { toast } from "sonner";
 
 export const useKundliMatching = () => {
   const {
-     control,
-     handleSubmit,
-     setValue,
-     formState: { errors, isSubmitting },
-     reset,
-   } = useForm();
- 
-   const onSubmit = async (data) => {
-     try {
-       if (data.dob && data.tob) {
-         const dateTime = new Date(`${data.dob}T${data.tob}`);
-         data.dob = dateTime.toISOString(); 
-       }
- 
-       data.userId = Number(data.userId || 0);
-       data.tzOffset = Number(data.tzOffset || 0); 
-       data.lat = Number(data.lat || 0);
-       data.long = Number(data.long || 0);
- 
-       const saveResponse = await apiServiceWithSession(
-         "/kundli/create",
-         "post",
-         data
-       );
- 
-       if (saveResponse.success) {
-         toast.success(saveResponse.message);
-         reset();
-       } else {
-         toast.error(saveResponse.message);
-       }
-     } catch (err) {
-       console.error("Error saving kundli:", err);
-       toast.error("Failed to process request. Please contact support.");
-     }
-   };
- 
-   return { onSubmit, control, handleSubmit, isSubmitting, errors, setValue };
-}
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      // Convert date/time to ISO for both male and female
+      ["male", "female"].forEach((key) => {
+        const person = data[key];
+        if (person.dob && person.tob) {
+          person.dob = new Date(`${person.dob}T${person.tob}`).toISOString();
+        }
+
+        person.userId = Number(person.userId || 0);
+        person.tzOffset = Number(person.tzOffset || 0);
+        person.lat = Number(person.lat || 0);
+        person.long = Number(person.long || 0);
+      });
+
+      const saveResponse = await apiServiceWithSession(
+        "/match/report",
+        "post",
+        data // { male: {...}, female: {...} }
+      );
+
+      if (saveResponse.success) {
+        toast.success(saveResponse.message || "Kundli match saved!");
+        reset();
+      } else {
+        toast.error(saveResponse.message || "Something went wrong.");
+      }
+    } catch (err) {
+      console.error("Error saving kundli:", err);
+      toast.error("Failed to process request. Please contact support.");
+    }
+  };
+
+  return { onSubmit, control, handleSubmit, isSubmitting, errors, setValue };
+};
