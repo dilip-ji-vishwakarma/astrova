@@ -22,10 +22,9 @@ export const useFollowMutations = ({ id }) => {
   useEffect(() => {
   const fetchAstrologerDetails = async () => {
     try {
-      const userInfo = localStorage.getItem("userInfo")
       setLoading(true);
       const response = await apiService(
-        `${astrologer_details}/${id}?userId=${userInfo}`,
+        `${astrologer_details}/${id}`,
         "get"
       );
       if (response?.success) {
